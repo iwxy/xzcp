@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+       
+	<context:property-placeholder location="classpath:db.properties"/>
+	<context:annotation-config/>
+	
+	<!-- 数据源，使用c3p0 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<!-- 注入属性值 -->
+       	<property name="driverClass" value="${jdbc.driverClass}"></property>
+       	<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+       	<property name="user" value="${jdbc.user}"></property>
+       	<property name="password" value="${jdbc.password}"></property>
+     </bean>
+	
+	<!-- sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 加载mybatis的配置文件 -->
+		<property name="configLocation" value="classpath:SqlMapConfig.xml"/>
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- mapper批量扫描，从mapper包中扫描出mapper接口，自动创建代理对象并且在spring容器中注册
+	遵循规范：将mapper.java和mapper.xml映射文件名称保持一致，且在一个目录中
+	自动扫描出来的mapper的bean的id为mapper类名（首字母小写）
+	 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 指定扫描的包名
+		如果扫描多个包，每个包中间使用半角逗号分隔
+		 -->
+		<property name="basePackage" value="cn.xzcp.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+	
+	<!-- 配置声明式事务(spring中的事务) -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	   <property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 配置注解扫描 -->
+	<context:component-scan base-package="cn.xzcp.service"></context:component-scan>
+    
+    <!-- 引入其他spring配置文件 -->
+	<!-- <import resource="classpath:bean.xml"/> -->
+</beans>

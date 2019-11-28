@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xzcp.mapper.UserMapper">
+	<resultMap type="cn.xzcp.bean.User" id="userMap">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_password" property="password"/>
+		<result column="user_sex" property="userSex"/>
+		<result column="user_classid" property="userClassid"/>
+		<result column="user_identity" property="userIdentity"/>
+		<result column="user_dormitory" property="userDormitory"/>
+		<result column="user_phone" property="userPhone"/>
+		<result column="user_address" property="userAddress"/>
+	</resultMap>
+	
+	<select id="login"  resultMap="userMap" >
+			select * from user where user_id=#{userId}
+	</select>
+	
+	
+</mapper>

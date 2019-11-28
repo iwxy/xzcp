@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://myvatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 全局配置参数，需要时设置 -->
+	<settings>
+		<!-- 打开延迟加载的开关 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+		<!-- 将积极加载改为消极加载，即按需加载 -->
+		<setting name="aggressiveLazyLoading" value="false" />
+		<!-- 开启二级缓存 -->
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+
+	<typeAliases>
+		<!-- 针对单个别名定义 type：类型的路径 alias：别名 <typeAlias type="cn.manage.bean.User" 
+			alias="user"/> -->
+
+		<!-- 批量定义别名 指定包名，mybatis自动扫描包中的po类，自动定义别名，别名就是类名（首字母大写或小写都可以） -->
+		<package name="cn.xzcp.bean" />
+	</typeAliases>
+	<!-- 引入分页插件 -->
+	<!-- 要求3.3版本以上的mybatis -->
+	<!-- <plugins>
+		pageHelper的工作原理：通过mybatis的pulgin实现了Interceptor接口， 从而获得要执行的sql语句实现分页技术
+		此处拼写有误 <plugin interceptor="com.github.pagehelper.PageIntercepter"></plugin>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			分页参数合理化，即不可能到达-1页之类不合理的页数
+			<property name="reasonable" value="true" />
+		</plugin>
+	</plugins> -->
+
+
+</configuration>
