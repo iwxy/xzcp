@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.xzcp.mapper.UserMapper">
-	<resultMap type="cn.xzcp.bean.User" id="userMap">
+	<resultMap type="cn.xzcp.bean.UserMes" id="userMap">
 		<result column="user_id" property="userId"/>
 		<result column="user_name" property="userName"/>
 		<result column="user_password" property="password"/>
@@ -13,11 +13,39 @@
 		<result column="user_dormitory" property="userDormitory"/>
 		<result column="user_phone" property="userPhone"/>
 		<result column="user_address" property="userAddress"/>
+		<result column="class_name" property="userClassName"/>
+		<result column="identity_name" property="userIdentityName"/>
 	</resultMap>
 	
-	<select id="login"  resultMap="userMap" >
-			select * from user where user_id=#{userId}
+	
+	 <!-- 通过学号查询，得到userMes对象 -->
+	<select id="getUser"  resultMap="userMap" >
+			select user_id,user_name,user_password,user_sex,user_classid,user_identity,user_dormitory,user_phone,user_address,class_name,identity_name
+			from user,class,identity 
+			where user.user_id=#{userId} and user.user_identity=identity.identity_id and user.user_classid=class.class_id
 	</select>
+	
+	<!-- 修改密码 -->
+	<update id="changePwd" parameterType="user">
+		update user set user_password=#{password} where user_id=#{userId}
+	</update>
+	
+	<!-- 修改用户信息 -->
+	<update id="changeUser" parameterType="userMes">
+		update user 
+		<set>
+			<if test="userName!=null">user_name=#{userName},</if>
+			<if test="password!=null">user_password=#{password},</if>
+			<if test="userSex!=null">user_sex=#{userSex},</if>
+			<if test="userClassid!=0">user_classid=#{userClassid},</if>
+			<if test="userIdentity!=0">user_identity=#{userIdentity},</if>
+			<if test="userDormitory!=null">user_dormitory=#{userDormitory},</if>
+			<if test="userPhone!=null">user_phone=#{userPhone},</if>
+			<if test="userAddress!=null">user_address=#{userAddress}</if>
+				
+		</set>
+		where user_id=#{userId}
+	</update>
 	
 	
 </mapper>

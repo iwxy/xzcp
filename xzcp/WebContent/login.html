@@ -12,8 +12,8 @@
         <form class="layui-form">
             <div class="login_face"><img src="images/logo.png"></div>
             <div class="layui-form-item input-item">
-                <label for="username">用户名</label>
-                <input type="text" lay-verify="required" name="username" placeholder="请输入账号" autocomplete="off" id="username" class="layui-input">
+                <label for="userId">用户名</label>
+                <input type="text" lay-verify="required" name="userId" placeholder="请输入账号" autocomplete="off" id="username" class="layui-input">
             </div>
             <div class="layui-form-item input-item">
                 <label for="password">密码</label>
@@ -63,12 +63,17 @@
              * 表单提交
              */
             form.on("submit(login)", function (data) {
-                okUtils.ajax("/login", "post", data.field, true).done(function (response) {
+                okUtils.ajax("/user/login", "post", data.field, true).done(function (response) {
                 	okLayer.greenTickMsg(response.msg, function () {
-                    	
-                        window.location = "pages/index.html";
+                		
+                		//cookie传参时，中文会报错
+                        document.cookie = "userId="+response.data.userId;
+                        //document.cookie = "userIdentity="+response.data.userIdentity;
+                        window.location="pages/index.html";
+                        //var uri="pages/index.html?userId="+response.data.userId;
+                        //window.location =encodeURI(uri); 
                     })
-                }).fail(function (error) {
+                }).fail(function (error) {     
                     console.log(error)
                 });
                 return false;

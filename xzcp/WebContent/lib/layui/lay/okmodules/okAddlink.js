@@ -1,16 +1,12 @@
 layui.define(['form', 'jquery'], function (exports) {
     var $ = layui.jquery;
     var form = layui.form;
-    var $form = $('form');//当前表单元素
+    var $form = $('form');// 当前表单元素
 
     /**
-     * 传入需要联动的三个下拉选择元素（顺序：省、市、区）
-     * {
-        province:'select[name=province]',
-        city:'select[name=city]',
-        area:'select[name=area]',
-     }
-     */
+	 * 传入需要联动的三个下拉选择元素（顺序：省、市、区） { province:'select[name=province]',
+	 * city:'select[name=city]', area:'select[name=area]', }
+	 */
     var config = {
         defElm: {
             province: 'select[name=province]',
@@ -40,13 +36,13 @@ layui.define(['form', 'jquery'], function (exports) {
             loadProvince(data);
         });
 
-        //加载省数据
+        // 加载省数据
         function loadProvince(areaData) {
             var proHtml = '';
             for (var i = 0; i < areaData.length; i++) {
                 proHtml += '<option value="' + areaData[i].provinceCode + '_' + areaData[i].mallCityList.length + '_' + i + '">' + areaData[i].provinceName + '</option>';
             }
-            //初始化省数据
+            // 初始化省数据
             $form.find(el_province).append(proHtml);
             form.render();
             var _filter = el_province.attr("lay-filter");
@@ -65,7 +61,7 @@ layui.define(['form', 'jquery'], function (exports) {
             });
         }
 
-        //加载市数据
+        // 加载市数据
         function loadCity(citys) {
             var cityHtml = '<option value="">请选择市</option>';
             for (var i = 0; i < citys.length; i++) {
@@ -88,7 +84,7 @@ layui.define(['form', 'jquery'], function (exports) {
             });
         }
 
-        //加载县/区数据
+        // 加载县/区数据
         function loadArea(areas) {
             var areaHtml = '<option value="">请选择县/区</option>';
             for (var i = 0; i < areas.length; i++) {

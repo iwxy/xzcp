@@ -15,7 +15,7 @@ public class ResponseResult implements Serializable {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	// 响应业务状态
-	private Integer status;
+	private Integer code;
 
 	// 响应消息
 	private String msg;
@@ -23,8 +23,8 @@ public class ResponseResult implements Serializable {
 	// 响应中的数据
 	private Object data;
 
-	public static ResponseResult build(Integer status, String msg, Object data) {
-		return new ResponseResult(status, msg, data);
+	public static ResponseResult build(Integer code, String msg, Object data) {
+		return new ResponseResult(code, msg, data);
 	}
 
 	public static ResponseResult ok(Object data) {
@@ -39,28 +39,28 @@ public class ResponseResult implements Serializable {
 
 	}
 
-	public static ResponseResult build(Integer status, String msg) {
-		return new ResponseResult(status, msg, null);
+	public static ResponseResult build(Integer code, String msg) {
+		return new ResponseResult(code, msg, null);
 	}
 
-	public ResponseResult(Integer status, String msg, Object data) {
-		this.status = status;
+	public ResponseResult(Integer code, String msg, Object data) {
+		this.code = code;
 		this.msg = msg;
 		this.data = data;
 	}
 
 	public ResponseResult(Object data) {
-		this.status = 200;
+		this.code = 0;
 		this.msg = "OK";
 		this.data = data;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public Integer getCode() {
+		return code;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
 	public String getMsg() {
@@ -101,7 +101,7 @@ public class ResponseResult implements Serializable {
 					obj = MAPPER.readValue(data.asText(), clazz);
 				}
 			}
-			return build(jsonNode.get("status").intValue(), jsonNode.get("msg").asText(), obj);
+			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(), obj);
 		} catch (Exception e) {
 			return null;
 		}
@@ -138,7 +138,7 @@ public class ResponseResult implements Serializable {
 				obj = MAPPER.readValue(data.traverse(),
 						MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
 			}
-			return build(jsonNode.get("status").intValue(), jsonNode.get("msg").asText(), obj);
+			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(), obj);
 		} catch (Exception e) {
 			return null;
 		}

@@ -6,7 +6,7 @@ public class Item {
 	private String itemName;
 	private String itemDiscribe;
 	private int itemCommitteeid;
-	private Double itemScore;
+	private double itemScore;
 
 	@Override
 	public String toString() {
@@ -46,11 +46,11 @@ public class Item {
 		this.itemCommitteeid = itemCommitteeid;
 	}
 
-	public Double getItemScore() {
+	public double getItemScore() {
 		return itemScore;
 	}
 
-	public void setItemScore(Double itemScore) {
+	public void setItemScore(double itemScore) {
 		this.itemScore = itemScore;
 	}
 

@@ -1,0 +1,36 @@
+[
+    {
+        "title": "首页",
+        "href": "console.html",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe654;",
+        "spread": true,
+        "isCheck": true
+    },
+    
+    {
+        "title": "查看月分数",
+        "href": "",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe654;",
+        "spread": true
+    },
+       
+    {
+        "title": "查看学期分数",
+        "href": "",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe654;",
+        "spread": true
+    },
+    
+    {
+        "title": "查看记录",
+        "href": "",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe654;",
+        "spread": true
+    }
+    
+    
+]

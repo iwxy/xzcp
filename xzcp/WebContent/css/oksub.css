@@ -2,6 +2,8 @@
 @import "../lib/layui/css/layui.css";
 @import "okadmin.animate.css";
 
+
+
 /**控制台样式*/
 .console .map-body{height:360px}
 .console .map-china{height:360px}

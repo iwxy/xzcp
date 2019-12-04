@@ -1,0 +1,59 @@
+[
+    {
+        "title": "首页",
+        "href": "console.html",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe654;",
+        "spread": true,
+        "isCheck": true
+    },
+    {
+        "title": "学生功能",
+        "href": "",
+        "icon": "&#xe66f;",
+        "spread": false,
+        "children": [
+            {
+                "title": "查看月分数",
+                "href": "",
+                "fontFamily": "layui-icon",
+                "icon": "&#xe62e;",
+                "spread": false
+            },
+            {
+                "title": "查看学期分数",
+                "href": "",
+                "icon": "&#xe62e;",
+                "spread": false
+            },
+            {
+                "title": "查看记录",
+                "href": "",
+                "icon": "&#xe62e;",
+                "spread": false
+            }
+        ]
+    },
+    {
+        "title": "班委职责",
+        "href": "",
+        "fontFamily": "ok-icon",
+        "icon": "&#xe68a;",
+        "spread": false,
+        "children": [
+            {
+                "title": "录入班级情况",
+                "href": "",
+                "icon": "&#xe609;",
+                "spread": false,
+                "target": "_blank"
+            },
+            {
+                "title": "管理自己记录的东西",
+                "href": "",
+                "icon": "&#xe61c;",
+                "spread": false
+            }
+        ]
+    }
+]
