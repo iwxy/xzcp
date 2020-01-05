@@ -23,8 +23,15 @@ public class ResponseResult implements Serializable {
 	// 响应中的数据
 	private Object data;
 
+	// 总数量
+	private Integer count;
+
 	public static ResponseResult build(Integer code, String msg, Object data) {
 		return new ResponseResult(code, msg, data);
+	}
+
+	public static ResponseResult build(Integer code, String msg, Integer count, Object data) {
+		return new ResponseResult(code, msg, count, data);
 	}
 
 	public static ResponseResult ok(Object data) {
@@ -49,6 +56,13 @@ public class ResponseResult implements Serializable {
 		this.data = data;
 	}
 
+	public ResponseResult(Integer code, String msg, Integer count, Object data) {
+		this.code = code;
+		this.msg = msg;
+		this.data = data;
+		this.count = count;
+	}
+
 	public ResponseResult(Object data) {
 		this.code = 0;
 		this.msg = "OK";
@@ -69,6 +83,14 @@ public class ResponseResult implements Serializable {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	public Object getData() {
@@ -101,7 +123,8 @@ public class ResponseResult implements Serializable {
 					obj = MAPPER.readValue(data.asText(), clazz);
 				}
 			}
-			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(), obj);
+			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(),
+					jsonNode.get("count").intValue(), obj);
 		} catch (Exception e) {
 			return null;
 		}
@@ -138,7 +161,8 @@ public class ResponseResult implements Serializable {
 				obj = MAPPER.readValue(data.traverse(),
 						MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
 			}
-			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(), obj);
+			return build(jsonNode.get("code").intValue(), jsonNode.get("msg").asText(),
+					jsonNode.get("count").intValue(), obj);
 		} catch (Exception e) {
 			return null;
 		}

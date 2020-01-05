@@ -2,7 +2,7 @@ package cn.xzcp.bean;
 
 public class Item {
 
-	private int itemId;
+	protected int itemId;
 	private String itemName;
 	private String itemDiscribe;
 	private int itemCommitteeid;

@@ -2,7 +2,7 @@
     {
         "title": "首页",
         "href": "console.html",
-        "fontFamily": "ok-icon",
+        "fontFamily": "layui-icon",
         "icon": "&#xe654;",
         "spread": true,
         "isCheck": true
@@ -37,32 +37,32 @@
     {
         "title": "系统管理",
         "href": "",
-        "fontFamily": "ok-icon",
-        "icon": "&#xe68a;",
+        "icon": "&#xe654;",
         "spread": false,
         "children": [
             {
                 "title": "登录页面",
                 "href": "../login.html",
-                "icon": "&#xe609;",
-                "spread": false,
-                "target": "_blank"
+                "icon": "&#xe654;",
+                "spread": false
             },
             {
                 "title": "403页面",
                 "href": "system/403.html",
-                "icon": "&#xe61c;",
+                "icon": "&#xe654;",
                 "spread": false
             },
             {
                 "title": "404页面",
                 "href": "system/404.html",
+                "fontFamily": "layui-icon",
                 "icon": "&#xe61c;",
                 "spread": false
             },
             {
                 "title": "500页面",
                 "href": "system/500.html",
+                "fontFamily": "layui-icon",
                 "icon": "&#xe61c;",
                 "spread": false
             }

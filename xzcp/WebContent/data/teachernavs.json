@@ -2,8 +2,7 @@
     {
         "title": "首页",
         "href": "console.html",
-        "fontFamily": "ok-icon",
-        "icon": "&#xe654;",
+        "icon": "&#xe68e;",
         "spread": true,
         "isCheck": true
     },
@@ -16,14 +15,13 @@
             {
                 "title": "管理学生信息",
                 "href": "",
-                "fontFamily": "layui-icon",
-                "icon": "&#xe62e;",
+                "icon": "&#xe642;",
                 "spread": false
             },
             {
                 "title": "选择班委",
                 "href": "",
-                "icon": "&#xe62e;",
+                "icon": "&#xe66e;",
                 "spread": false
             }
         ]
@@ -31,27 +29,26 @@
     {
         "title": "分数和记录",
         "href": "",
-        "fontFamily": "ok-icon",
-        "icon": "&#xe68a;",
+        "icon": "&#xe60a;",
         "spread": false,
         "children": [
             {
                 "title": "查看记录",
                 "href": "",
-                "icon": "&#xe609;",
+                "icon": "&#xe60e;",
                 "spread": false,
                 "target": "_blank"
             },
             {
                 "title": "查看月分数",
                 "href": "",
-                "icon": "&#xe61c;",
+                "icon": "&#xe63c;",
                 "spread": false
             },
             {
                 "title": "查看学期分数",
                 "href": "",
-                "icon": "&#xe61c;",
+                "icon": "&#xe705;",
                 "spread": false
             }
         ]

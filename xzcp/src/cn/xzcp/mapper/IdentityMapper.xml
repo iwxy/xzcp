@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xzcp.mapper.IdentityMapper">
+	<resultMap type="cn.xzcp.bean.IdentityMes" id="identityMap">
+		<result column="identity_id" property="identityId"/>
+		<result column="identity_name" property="identityName"/>
+	</resultMap>
+
+	<!-- 通过身份号查询，得到identityMes对象 -->
+	<select id="getIdentity"  resultMap="identityMap" >
+		select * from identity where identity_id=#{identityId}
+	</select>
+	
+	<!-- 查询分页班委的信息，得到identityMes对象 -->
+	<select id="getPageIdentity" parameterType="map" resultMap="identityMap" >
+		select * from identity where identity_id>3 limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 查询所有班委的信息，得到identityMes对象 -->
+	<select id="getAllIdentity" resultMap="identityMap" >
+		select * from identity where identity_id>3
+	</select>
+	
+	<!-- 删除班委 -->
+	<delete id="deleteIdentity" parameterType="int">
+		delete from identity where identity_id=#{identityId}
+    </delete>
+    
+    <!-- 添加班委 -->
+	<insert id="addIdentity" parameterType="identityMes">
+		insert into identity(identity_name
+		) values(
+			#{identityName}
+		)
+    </insert>
+    
+    <!-- 修改班委信息 -->
+	<update id="changeIdentity" parameterType="identityMes">
+		update identity 
+		<set>
+			<if test="identityName!=null">identity_name=#{identityName}</if>
+				
+		</set>
+		where identity_id=#{identityId}
+	</update>
+	
+</mapper>

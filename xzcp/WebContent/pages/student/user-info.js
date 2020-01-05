@@ -1,5 +1,5 @@
-layui.use([ 'form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
-		'okLayer' ], function() {
+layui.use(['form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
+		'okLayer'], function() {
 	var form = layui.form;
 	var layer = layui.layer;
 	var upload = layui.upload;
@@ -23,12 +23,9 @@ layui.use([ 'form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
 	// });
 
 	// 通过cookie传参
-	var params = okUtils.getCookie();
-	var userId = params[0];
+	var params = okUtils.getCookie()[0];
 
-	var getUser = "userId=" + userId;
-
-	okUtils.ajax("/user/getUser", "post", getUser, true).done(
+	okUtils.ajax("/user/getUser", "post", params, true).done(
 			function(response) {
 				var user = response.data;
 
@@ -38,14 +35,24 @@ layui.use([ 'form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
 				$("#userIdentityName").val(user.userIdentityName);
 				$("#userDormitory").val(user.userDormitory);
 				$("#userPhone").val(user.userPhone);
-				var arr = user.userAddress.split(',');
-				// alert(arr[0]);
-				// alert(arr[1]);
-				// $("#province").val(arr[0]);
-				$("#province option[value='0'] ").text(arr[0]);
-				$("#city option[value='0'] ").text(arr[1]);
-				$("#area option[value='0'] ").text(arr[2]);
-				$("#userAddress").val(arr[3]);
+
+				if (user.userAddress != "") {
+					var arr = user.userAddress.split(',');
+					// alert(arr[0]);
+					// alert(arr[1]);
+					// $("#province").val(arr[0]);
+					$("#province").prepend(
+							"<option value='0' selected>" + arr[0]
+									+ "</option>");
+					$("#city").prepend(
+							"<option value='0' selected>" + arr[1]
+									+ "</option>");
+					$("#area").prepend(
+							"<option value='0' selected>" + arr[2]
+									+ "</option>");
+					$("#userAddress").val(arr[3]);
+					form.render('select');
+				}
 
 				if (user.userSex == "男") {
 					$("#userSexnan").attr("checked", 'checked');
@@ -70,6 +77,10 @@ layui.use([ 'form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
 					var city = $("#city").find("option:selected").text();
 					var area = $("#area").find("option:selected").text();
 					var address = data.field.userAddress;
+					/*
+					 * alert("省：" + province); alert("市：" + city); alert("区：" +
+					 * area); alert("地址：" + address); return false;
+					 */
 					if (province == "请选择省") {
 						okLayer.redCryMsg("请选择省！", function() {
 						});
@@ -85,6 +96,7 @@ layui.use([ 'form', 'layer', 'upload', 'laydate', 'okAddlink', 'okUtils',
 						});
 						return false;
 					}
+
 					data.field.userAddress = province + "," + city + "," + area
 							+ "," + address;
 					okUtils.ajax("/user/changeUser", "post", data.field, true)

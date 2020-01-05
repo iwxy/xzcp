@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加考评项</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+    <div class="ok-body">
+        <!--form表单-->
+        <form class="layui-form layui-form-pane ok-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">考评项名<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="itemName" placeholder="请输入考评项名" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+			    <label class="layui-form-label">班委<font color="red"> *</font></label>
+			    <div class="layui-input-block">
+			      <select name="itemCommitteeid" id="itemCommitteeid" lay-verify="required">
+			        <option value="" selected>请选择</option>
+			      </select>
+			    </div>
+		    </div>
+		    <div class="layui-form-item">
+                <label class="layui-form-label">分值<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="itemScore" placeholder="请输入考评项分值" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="itemDiscribe" placeholder="请输入考评项的描述" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "form", "layer", "upload" ,"laydate", "okLayer", "okUtils"], function () {
+            let form = layui.form;
+            let layer = layui.layer;
+        	let upload = layui.upload;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            var params="";
+            
+            okUtils.ajax("/item/getAllCommittee", "get", params, true).done(
+        			function(response) {
+        				var identity = response.data;
+
+        				for(var i=0;i<identity.length;i++){
+        					$("#itemCommitteeid").append("<option value='"+identity[i].identityId+"'>"+identity[i].identityName+"</option>");
+        				}
+        				form.render('select');
+        				
+        				form.on("submit(add)", function (data) {
+        					if(data.itemCommitteeid){
+        						okLayer.redCryMsg("请选择班委！", function() {
+        						});
+        						return false;
+        					}
+        	                okUtils.ajax("/item/addItem", "post", data.field, true).done(function (response) {
+        	                    console.log(response);
+        	                    okLayer.greenTickMsg("添加成功", function () {
+        	                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+        	                    });
+        	                }).fail(function (error) {
+        	                    console.log(error)
+        	                });
+        	                return false;
+        	            });
+        				
+        				
+        			}).fail(function (error) {
+	                    console.log(error)
+	                });
+            return false;
+
+            
+        })
+    </script>
+</body>
+</html>

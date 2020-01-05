@@ -7,12 +7,9 @@ layui.use([ 'form', 'layer', 'okUtils', 'okLayer' ], function() {
 	var okLayer = layui.okLayer;
 
 	// 通过cookie传参
-	var params = okUtils.getCookie();
-	var userId = params[0];
+	var params = okUtils.getCookie()[0];
 
-	var getUser = "userId=" + userId;
-
-	okUtils.ajax("/user/getUser", "post", getUser, true).done(
+	okUtils.ajax("/user/getUser", "post", params, true).done(
 			function(response) {
 				var user = response.data;
 

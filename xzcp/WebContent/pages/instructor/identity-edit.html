@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>更新班委</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+    <div class="ok-body">
+        <!--form表单-->
+        <form class="layui-form layui-form-pane ok-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">班委id<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="identityId" id="identityId" value="" disabled autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">班委名<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="identityName" id="identityName" value="" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "form", "layer", "upload" ,"laydate", "okLayer", "okUtils"], function () {
+            let form = layui.form;
+            let layer = layui.layer;
+        	let upload = layui.upload;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            var identityId = okUtils.oneValues();
+			var params = "identityId=" + identityId;
+            
+            okUtils.ajax("/identity/getIdentity", "get", params, true).done(
+        			function(responses) {
+        				var identity = responses.data;
+        				$("#identityId").val(identity.identityId);
+        				$("#identityName").val(identity.identityName);
+        				
+	        				
+       				form.on("submit(add)", function (data) {
+       	                okUtils.ajax("/identity/changeIdentity", "post", data.field, true).done(function (response) {
+       	                    console.log(response);
+       	                    okLayer.greenTickMsg("修改成功", function () {
+       	                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+       	                    });
+       	                }).fail(function (error) {
+       	                    console.log(error)
+       	                });
+       	                return false;
+       	            });
+	        				
+	        				
+            
+        			}).fail(function (error) {
+	                    console.log(error)
+	                });
+            return false;
+
+            
+        })
+    </script>
+</body>
+</html>

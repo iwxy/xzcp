@@ -2,7 +2,7 @@ package cn.xzcp.bean;
 
 public class Identity {
 
-	private int identityId;
+	protected int identityId;
 	private String identityName;
 
 	@Override

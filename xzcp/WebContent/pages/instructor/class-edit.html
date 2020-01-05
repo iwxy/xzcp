@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>更新班级</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+    <div class="ok-body">
+        <!--form表单-->
+        <form class="layui-form layui-form-pane ok-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">班级号<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="classId" id="classId" value="" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">班级名<font color="red"> *</font></label>
+                <div class="layui-input-block">
+                    <input type="text" name="className" id="className" value="" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+			    <label class="layui-form-label">班主任<font color="red"> *</font></label>
+			    <div class="layui-input-block">
+			      <select name="classTeacher" id="classTeacher" lay-verify="required">
+			        <option value="" selected>请选择</option>
+			      </select>
+			    </div>
+		    </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "form", "layer", "upload" ,"laydate", "okLayer", "okUtils"], function () {
+            let form = layui.form;
+            let layer = layui.layer;
+        	let upload = layui.upload;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            var classId = okUtils.oneValues();
+			var params = "classId=" + classId;
+            
+            okUtils.ajax("/class/getClass", "get", params, true).done(
+        			function(responses) {
+        				var classes = responses.data;
+        				$("#classId").val(classes.classId);
+        				$("#className").val(classes.className);
+        				$("#classTeacher").append("<option value='"+classes.classTeacher+"' selected>"+classes.classTeacherName+"</option>");
+        				form.render('select');
+        				
+	            okUtils.ajax("/class/getAllTeacher", "get", params, true).done(
+	        			function(response) {
+	        				var user = response.data;
+	
+	        				for(var i=0;i<user.length;i++){
+	        					$("#classTeacher").append("<option value='"+user[i].userId+"'>"+user[i].userName+"</option>");
+	        				}
+	        				form.render('select');
+	        				
+	        				form.on("submit(add)", function (data) {
+	        					if(data.classTeacher){
+	        						okLayer.redCryMsg("请选择班主任！", function() {
+	        						});
+	        						return false;
+	        					}
+	        	                okUtils.ajax("/class/changeClass", "post", data.field, true).done(function (response) {
+	        	                    console.log(response);
+	        	                    okLayer.greenTickMsg("修改成功", function () {
+	        	                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+	        	                    });
+	        	                }).fail(function (error) {
+	        	                    console.log(error)
+	        	                });
+	        	                return false;
+	        	            });
+	        				
+	        				
+	        			}).fail(function (error) {
+		                    console.log(error)
+		                });
+            
+        			}).fail(function (error) {
+	                    console.log(error)
+	                });
+            return false;
+
+            
+        })
+    </script>
+</body>
+</html>

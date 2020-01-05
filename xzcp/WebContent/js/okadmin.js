@@ -21,13 +21,10 @@ layui
 					// var getUser = "userId=" + userId;
 
 					// 通过cookie传参
-					var params = okUtils.getCookie();
-					var userId = params[0];
-
-					var getUser = "userId=" + userId;
+					var params = okUtils.getCookie()[0];
 
 					okUtils
-							.ajax("/user/getUser", "post", getUser, true)
+							.ajax("/user/getUser", "post", params, true)
 							.done(
 									function(response) {
 										var user;
@@ -434,7 +431,27 @@ layui
 																			"确定要退出吗？",
 																			function(
 																					index) {
-																				window.location = "../login.html";
+																				okUtils
+																						.ajax(
+																								"/user/exit",
+																								"post",
+																								"",
+																								true)
+																						.done(
+																								function(
+																										response) {
+																									// 重置cookie中的值
+																									setCookie = "userId="
+																											+ "";
+																									window.location = "../login.html";
+																								})
+																						.fail(
+																								function(
+																										error) {
+																									console
+																											.log(error)
+																								});
+
 																			});
 														});
 

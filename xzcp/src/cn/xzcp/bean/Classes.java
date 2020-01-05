@@ -2,7 +2,7 @@ package cn.xzcp.bean;
 
 public class Classes {
 
-	private int classId;
+	protected int classId;
 	private String className;
 	private int classTeacher;
 

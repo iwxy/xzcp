@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xzcp.mapper.ClassMapper">
+	<resultMap type="cn.xzcp.bean.ClassMes" id="classMap">
+		<result column="class_id" property="classId"/>
+		<result column="class_name" property="className"/>
+		<result column="class_teacher" property="classTeacher"/>
+		<result column="user_name" property="classTeacherName"/>
+	</resultMap>
+
+	<!-- 通过学号查询，得到userMes对象 -->
+	<select id="getClass"  resultMap="classMap" >
+			select class_id,class_name,class_teacher,user_name
+			from user u,class c
+			where c.class_id=#{classId} and c.class_teacher=u.user_id
+	</select>
+	
+	<!-- 查询分页班级的信息，得到classMes对象 -->
+	<select id="getPageClass" parameterType="map" resultMap="classMap" >
+		select class_id,class_name,class_teacher,user_name from class c,user u where c.class_teacher=u.user_id limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 查询所有班级的信息，得到classMes对象 -->
+	<select id="getAllClass" resultMap="classMap" >
+		select class_id,class_name,class_teacher,user_name from class c,user u where c.class_teacher=u.user_id
+	</select>
+	
+	<!-- 删除班级 -->
+	<delete id="deleteClass" parameterType="int">
+		delete from class where class_id=#{classId}
+    </delete>
+    
+    <!-- 添加班级 -->
+	<insert id="addClass" parameterType="classMes">
+		insert into class(class_id,class_name,class_teacher
+		) values(
+			#{classId},
+			#{className},
+			#{classTeacher}
+		)
+    </insert>
+    
+    <!-- 修改班级信息 -->
+	<update id="changeClass" parameterType="classMes">
+		update class
+		<set>
+			<if test="className!=null">class_name=#{className},</if>
+			<if test="classTeacher!=null">class_teacher=#{classTeacher}</if>
+				
+		</set>
+		where class_id=#{classId}
+	</update>
+	
+</mapper>

@@ -65,7 +65,6 @@
             form.on("submit(login)", function (data) {
                 okUtils.ajax("/user/login", "post", data.field, true).done(function (response) {
                 	okLayer.greenTickMsg(response.msg, function () {
-                		
                 		//cookie传参时，中文会报错
                         document.cookie = "userId="+response.data.userId;
                         //document.cookie = "userIdentity="+response.data.userIdentity;

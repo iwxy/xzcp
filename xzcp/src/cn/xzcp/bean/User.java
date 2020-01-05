@@ -2,7 +2,7 @@ package cn.xzcp.bean;
 
 public class User {
 
-	private int userId;
+	protected int userId;
 	private String userName;
 	private String password;
 	private String userSex;

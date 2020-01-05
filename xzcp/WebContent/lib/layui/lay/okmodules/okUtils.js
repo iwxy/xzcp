@@ -1,5 +1,5 @@
 "use strict";
-layui.define([ "layer" ], function(exprots) {
+layui.define(["layer"], function(exprots) {
 	var $ = layui.jquery;
 	var okUtils = {
 		/**
@@ -43,7 +43,8 @@ layui.define([ "layer" ], function(exprots) {
 			var deferred = $.Deferred();
 			var loadIndex;
 			$.ajax({
-				url : okUtils.isFrontendBackendSeparate ? okUtils.baseUrl + url
+				url : okUtils.isFrontendBackendSeparate
+						? okUtils.baseUrl + url
 						: url,
 				type : type || "get",
 				data : params || {},
@@ -124,22 +125,25 @@ layui.define([ "layer" ], function(exprots) {
 				// 去掉前后空格，c为userId=16478004
 				var c = keysplit[i].trim();
 				// 截取c中=后面的值，返回
-				result[i] = c.substr(c.indexOf("=") + 1);
+				result[i] = c;
 			}
 			return result;
 		},
 
 		/**
-		 * 主要用于针对表格批量操作操作之前的检查
+		 * 主要用于针对表格批量操作操作之前的检查 判断表格有多少条数据被选中，并将被选中的id组成字符串返回
 		 * 
 		 * @param table
 		 * @returns {string}
 		 */
 		tableBatchCheck : function(table) {
+			// layui自带的方法，可返回被选中的对象
 			var checkStatus = table.checkStatus("tableId");
+			// 获得有多少行被选中
 			var rows = checkStatus.data.length;
 			if (rows > 0) {
 				var idsStr = "";
+				// 获取被选中数据的id，放入字符串idsStr中，用“，”分隔
 				for (var i = 0; i < checkStatus.data.length; i++) {
 					idsStr += checkStatus.data[i].id + ",";
 				}
@@ -195,9 +199,9 @@ layui.define([ "layer" ], function(exprots) {
 						.substr(4 - RegExp.$1.length));
 			for ( var k in o)
 				if (new RegExp("(" + k + ")").test(fmt))
-					fmt = fmt.replace(RegExp.$1,
-							(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k])
-									.substr(("" + o[k]).length)));
+					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1)
+							? (o[k])
+							: (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		},
 		number : {

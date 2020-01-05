@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>班委列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+    <div class="ok-body">
+       
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "okMock"], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let okMock = layui.okMock;
+            
+            let userTable = table.render({
+                elem: '#tableId', //表格标签的id
+                url: okMock.api.listIdentity,//url写这里，连接后台
+                limit: 10, //默认每页显示多少条数据
+                page: true, // 是否分页
+                toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+                defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+                size: "sm",
+                cols: [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "identityId", title: "班委id", width: 160, sort: true},
+                    {field: "identityName", title: "班委名", width: 100},
+                    {title: "操作", width: 100, align: "center", fixed: "right", templet: "#operationTpl"}
+                ]],
+                done: function (res, curr, count) {
+                    console.info(res, curr, count);
+                }
+            });
+
+            
+            table.on("toolbar(tableFilter)", function (obj) {
+                switch (obj.event) {
+                    case "batchDel":
+                        batchDel();
+                        break;
+                    case "add":
+                        add();
+                        break;
+                }
+            });
+
+            table.on("tool(tableFilter)", function (obj) {
+                let data = obj.data;
+                switch (obj.event) {
+                    case "edit":
+                        edit(data);
+                        break;
+                    case "del":
+                        del(data.identityId);
+                        break;
+                }
+            });
+
+            
+
+            function batchDel() {
+                okLayer.confirm("确定要批量删除吗？", function (index) {
+                    layer.close(index);
+                    let idsStr = okUtils.tableBatchCheck(table);
+                    if (idsStr) {
+                    	var params="idsStr="+idsStr;
+                        okUtils.ajax("/identity/deleteIdentity", "get", params, true).done(function (response) {
+                            console.log(response);
+                            okUtils.tableSuccessMsg(response.msg);
+                        }).fail(function (error) {
+                            console.log(error)
+                        });
+                    }
+                });
+            }
+
+            function add() {
+                okLayer.open("添加班委", "identity-add.html", "60%", "90%", null, function () {
+                    userTable.reload();
+                })
+            }
+
+            function edit(data) {
+                okLayer.open("更新班委", "identity-edit.html?identityId="+data.identityId, "60%", "90%", function (layero) {
+                    let iframeWin = window[layero.find("iframe")[0]["name"]];
+                    iframeWin.initForm(data);
+                }, function () {
+                    userTable.reload();
+                })
+            }
+
+            function del(identityId) {
+            	var params="idsStr="+identityId+",";
+                okLayer.confirm("确定要删除吗？", function (index) {
+                    okUtils.ajax("/identity/deleteIdentity", "get", params, true).done(function (response) {
+                        console.log(response);
+                        okUtils.tableSuccessMsg(response.msg);
+                    }).fail(function (error) {
+                        console.log(error)
+                    });
+                })
+            }
+        })
+    </script>
+    <!-- 头工具栏模板 -->
+    <script type="text/html" id="toolbarTpl">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加班委</button>
+        </div>
+    </script>
+    <!-- 行工具栏模板 -->
+    <script type="text/html" id="operationTpl">
+        <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+        <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    </script>
+    
+</body>
+</html>

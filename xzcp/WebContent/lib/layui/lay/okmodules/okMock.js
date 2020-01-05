@@ -5,6 +5,12 @@ layui
 				function(exprots) {
 					let okMock = {
 						api : {
+
+							listTeacher : "http://localhost:7050/xzcp/user/getAllTeacher",
+							listClass : "http://localhost:7050/xzcp/class/getAllClass",
+							listItem : "http://localhost:7050/xzcp/item/getAllItem",
+							listIdentity : "http://localhost:7050/xzcp/identity/getAllIdentity",
+
 							login : "https://www.easy-mock.com/mock/5d5d0dd46cfcbd1b8627bf1d/ok-admin-v2.0/login",
 							bsgrid : "http://rap2api.taobao.org/app/mock/233041/bsgrid",
 							datatables : "http://rap2api.taobao.org/app/mock/233041/datatables",

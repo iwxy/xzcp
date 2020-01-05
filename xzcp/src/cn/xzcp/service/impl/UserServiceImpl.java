@@ -1,5 +1,9 @@
 package cn.xzcp.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +51,61 @@ public class UserServiceImpl implements UserService {
 	public boolean changeUser(UserMes userMes) {
 		try {
 			userMapper.changeUser(userMes);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 获得分页教师的个人信息
+	 */
+	@Override
+	public List<UserMes> getPageTeacher(int page, int limit) {
+		List<UserMes> list;
+		int firstIndex = (page - 1) * limit;
+		Map<String, Integer> params = new HashMap();
+		// 第一个参数是从第几条开始显示
+		params.put("firstIndex", firstIndex);
+		// 第二个参数是要显示多少条
+		params.put("limit", limit);
+		list = userMapper.getPageTeacher(params);
+		return list;
+	}
+
+	/**
+	 * 获得所有教师的信息
+	 */
+	@Override
+	public List<UserMes> getAllTeacher() {
+		List<UserMes> list;
+		list = userMapper.getAllTeacher();
+		return list;
+	}
+
+	/**
+	 * 批量删除用户，也可单个
+	 */
+	@Override
+	public boolean deleteUser(String[] idsArray) {
+		for (int i = 0; i < idsArray.length; i++) {
+			int userId = Integer.valueOf(idsArray[i]);
+			try {
+				userMapper.deleteUser(userId);
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 添加用户
+	 */
+	@Override
+	public boolean addUser(UserMes userMes) {
+		try {
+			userMapper.addUser(userMes);
 			return true;
 		} catch (Exception e) {
 			return false;
