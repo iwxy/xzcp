@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>学期分数</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+	
+    <div class="ok-body">
+       
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+    
+	    let initData;
+	
+	    function initForm(data) {
+	        let jsonString = JSON.stringify(data);
+	        initData = JSON.parse(jsonString);
+	    }
+
+        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "okMock"], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let okMock = layui.okMock;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            form.val("filter", initData);
+            
+            let userTable = table.render({
+                elem: '#tableId', //表格标签的id
+                url: okMock.api.listStudentTermscore,//url写这里，连接后台
+                limit: 10, //默认每页显示多少条数据
+                page: true, // 是否分页
+                toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+                defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+                size: "sm",
+                cols: [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "termscoreStudentid", title: "学号", width: 160, sort: true},
+                    {field: "termscoreStudentName", title: "姓名", width: 100},
+                    {field: "termscoreDate", title: "时间", width: 100},
+                    {field: "termscoreScore", title: "分数", width: 100}
+	                ]],
+                done: function (res, curr, count) {
+                    console.info(res, curr, count);
+                }
+            });
+
+			     
+        });
+    </script>
+    <!-- 头工具栏模板 -->
+    <script type="text/html" id="toolbarTpl">
+        <div class="layui-btn-container">
+            <font class="layui-btn-sm" style="font-size:15px;">查看各个学期的分数</font>
+        </div>
+    </script>
+    
+</body>
+</html>

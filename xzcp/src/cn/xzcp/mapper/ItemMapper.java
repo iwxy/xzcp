@@ -1,7 +1,6 @@
 package cn.xzcp.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import cn.xzcp.bean.ItemMes;
 
@@ -10,12 +9,17 @@ public interface ItemMapper {
 	/**
 	 * 获得分页考评项的信息
 	 */
-	List<ItemMes> getPageItem(Map<String, Integer> params);
+	List<ItemMes> getPageItem(ItemMes itemMes);
 
 	/**
 	 * 获得所有考评项的信息
 	 */
 	List<ItemMes> getAllItem();
+
+	/**
+	 * 获得某个班委管理的所有考评项的信息
+	 */
+	List<ItemMes> getCommitteeAllItem(int identityId);
 
 	/**
 	 * 删除考评项

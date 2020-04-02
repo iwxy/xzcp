@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2019-12-04 13:12:40
+Date: 2020-02-28 10:54:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,22 +30,27 @@ CREATE TABLE `class` (
 -- Records of class
 -- ----------------------------
 INSERT INTO `class` VALUES ('0', '无班级', '0');
+INSERT INTO `class` VALUES ('34', 'fd', '0');
+INSERT INTO `class` VALUES ('453', 'gtrgrtfg', '0');
 INSERT INTO `class` VALUES ('1547', '15软件工程1班', '16478802');
 INSERT INTO `class` VALUES ('1647', '16软件工程1班', '16478802');
 INSERT INTO `class` VALUES ('1747', '17软件工程2班', '16478803');
+INSERT INTO `class` VALUES ('5465', 'fghfg', '0');
+INSERT INTO `class` VALUES ('23432', 'fdsdb', '0');
+INSERT INTO `class` VALUES ('67676', '好好', '0');
 
 -- ----------------------------
 -- Table structure for credit
 -- ----------------------------
 DROP TABLE IF EXISTS `credit`;
 CREATE TABLE `credit` (
-  `credit_id` int(20) NOT NULL,
+  `credit_id` int(20) NOT NULL AUTO_INCREMENT,
   `credit_studentid` int(20) NOT NULL,
   `credit_discribe` varchar(255) DEFAULT NULL,
   `credit_term` char(20) NOT NULL,
   `credit_type` char(20) NOT NULL,
   PRIMARY KEY (`credit_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of credit
@@ -57,10 +62,10 @@ INSERT INTO `credit` VALUES ('1', '16478004', '在本学期中表现良好', '�
 -- ----------------------------
 DROP TABLE IF EXISTS `identity`;
 CREATE TABLE `identity` (
-  `identity_id` int(11) NOT NULL,
+  `identity_id` int(11) NOT NULL AUTO_INCREMENT,
   `identity_name` varchar(255) NOT NULL,
   PRIMARY KEY (`identity_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of identity
@@ -86,13 +91,13 @@ INSERT INTO `identity` VALUES ('15', '学习委员');
 -- ----------------------------
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
-  `item_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_name` varchar(255) NOT NULL,
   `item_discribe` varchar(255) DEFAULT NULL,
   `item_committeeid` int(20) DEFAULT NULL,
   `item_score` double NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of item
@@ -133,7 +138,7 @@ INSERT INTO `item` VALUES ('30', '参加学院各类学术讲座', '积极参加
 -- ----------------------------
 DROP TABLE IF EXISTS `record`;
 CREATE TABLE `record` (
-  `record_id` int(30) NOT NULL,
+  `record_id` int(30) NOT NULL AUTO_INCREMENT,
   `record_committeeid` int(20) NOT NULL,
   `record_studentid` int(20) NOT NULL,
   `record_itemid` int(11) NOT NULL,
@@ -141,28 +146,34 @@ CREATE TABLE `record` (
   `record_discribe` varchar(255) DEFAULT NULL,
   `record_date` date NOT NULL,
   PRIMARY KEY (`record_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of record
 -- ----------------------------
-INSERT INTO `record` VALUES ('1', '1678001', '16478004', '3', '1', '白天旷课', '2019-11-04');
+INSERT INTO `record` VALUES ('1', '16478001', '16478004', '3', '1', '白天旷课', '2019-11-04');
 INSERT INTO `record` VALUES ('2', '16478001', '16478004', '1', '2', '一二节上课迟到', '2019-11-27');
-INSERT INTO `record` VALUES ('3', '16478001', '16478004', '2', '1', '三四节课早退', '2019-11-21');
-INSERT INTO `record` VALUES ('4', '16478001', '16478004', '4', '1', '无', '2019-10-29');
 INSERT INTO `record` VALUES ('5', '16478001', '16478002', '3', '2', '故意旷课', '2019-11-22');
+INSERT INTO `record` VALUES ('6', '16478001', '16478001', '2', '1', 'zzzz', '2020-01-09');
+INSERT INTO `record` VALUES ('7', '16478001', '16478001', '1', '1', '', '2020-01-03');
+INSERT INTO `record` VALUES ('8', '15478002', '15478001', '30', '1', '1547', '2020-02-12');
+INSERT INTO `record` VALUES ('9', '15478002', '15478002', '30', '1', '', '2020-01-08');
+INSERT INTO `record` VALUES ('10', '17478010', '17478006', '19', '1', 'aaa', '2020-02-05');
+INSERT INTO `record` VALUES ('11', '17478010', '17478006', '20', '2', '', '2020-02-01');
+INSERT INTO `record` VALUES ('12', '17478010', '17478010', '19', '1', '', '2020-01-22');
+INSERT INTO `record` VALUES ('28', '16478001', '16478001', '1', '1', '', '2020-02-17');
 
 -- ----------------------------
 -- Table structure for score
 -- ----------------------------
 DROP TABLE IF EXISTS `score`;
 CREATE TABLE `score` (
-  `score_id` int(20) NOT NULL,
+  `score_id` int(20) NOT NULL AUTO_INCREMENT,
   `score_studentid` int(20) NOT NULL,
   `score_score` double(11,1) NOT NULL,
   `score_date` date NOT NULL,
   PRIMARY KEY (`score_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of score
@@ -170,18 +181,25 @@ CREATE TABLE `score` (
 INSERT INTO `score` VALUES ('1', '16478004', '-3.5', '2019-11-01');
 INSERT INTO `score` VALUES ('2', '16478004', '-2.0', '2019-10-01');
 INSERT INTO `score` VALUES ('3', '16478002', '-4.0', '2019-11-01');
+INSERT INTO `score` VALUES ('4', '15478001', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('5', '15478002', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('6', '16478001', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('7', '16478002', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('8', '16478004', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('9', '17478006', '0.0', '2020-02-01');
+INSERT INTO `score` VALUES ('10', '17478010', '0.0', '2020-02-01');
 
 -- ----------------------------
 -- Table structure for termscore
 -- ----------------------------
 DROP TABLE IF EXISTS `termscore`;
 CREATE TABLE `termscore` (
-  `termscore_id` int(20) NOT NULL,
+  `termscore_id` int(20) NOT NULL AUTO_INCREMENT,
   `termscore_studentid` int(20) DEFAULT NULL,
   `termscore_score` double(11,1) DEFAULT NULL,
-  `tremscore_date` varchar(255) DEFAULT NULL,
+  `termscore_date` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`termscore_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of termscore
@@ -189,6 +207,13 @@ CREATE TABLE `termscore` (
 INSERT INTO `termscore` VALUES ('1', '16478004', '44.5', '2019-2020第一学期');
 INSERT INTO `termscore` VALUES ('2', '16478004', '53.5', '2018-2019第二学期');
 INSERT INTO `termscore` VALUES ('3', '16478002', '46.0', '2019-2020第一学期');
+INSERT INTO `termscore` VALUES ('4', '15478001', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('5', '15478002', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('6', '16478001', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('7', '16478002', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('8', '16478004', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('9', '17478006', '60.0', '2019-2020第二学期');
+INSERT INTO `termscore` VALUES ('10', '17478010', '60.0', '2019-2020第二学期');
 
 -- ----------------------------
 -- Table structure for user
@@ -199,7 +224,7 @@ CREATE TABLE `user` (
   `user_name` varchar(50) NOT NULL,
   `user_password` varchar(50) NOT NULL,
   `user_sex` varchar(2) DEFAULT NULL,
-  `user_classid` int(20) NOT NULL,
+  `user_classid` int(20) DEFAULT NULL,
   `user_identity` int(11) DEFAULT NULL,
   `user_dormitory` varchar(50) DEFAULT NULL,
   `user_phone` varchar(255) DEFAULT NULL,
@@ -210,12 +235,12 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('15478001', '翁梦倩', '123456', '女', '1547', '3', '13-103', '18352468953', '北京市,北京市,朝阳区,萍乡学院');
-INSERT INTO `user` VALUES ('15478002', '丁要男', '123456', '男', '1547', '2', '6-501', '18356478501', '北京市,北京市,朝阳区,萍乡学院');
+INSERT INTO `user` VALUES ('15478001', '翁梦倩', '123456', '女', '1547', '3', '13-103', '18279994742', '北京市,北京市,朝阳区,萍乡');
+INSERT INTO `user` VALUES ('15478002', '丁要男', '123456', '男', '1547', '4', '6-501', '18356478501', '北京市,北京市,朝阳区,萍乡学院');
 INSERT INTO `user` VALUES ('16478001', '金咏琪', '123456', '女', '1647', '5', '13-204', '18360457805', '北京市,北京市,朝阳区,萍乡学院');
 INSERT INTO `user` VALUES ('16478002', '陈洪特', '123456', '男', '1647', '6', '12-210', '16548752460', '北京市,北京市,朝阳区,萍乡学院');
-INSERT INTO `user` VALUES ('16478004', '王欣妍', '123456', '女', '1647', '3', '13-203', '18279994742', '河北省,唐山市,路北区,萍乡学院');
-INSERT INTO `user` VALUES ('16478801', '彭书记', '123456', '男', '0', '1', '0', '13780563245', '山西省,长治市,屯留县,萍乡学院');
+INSERT INTO `user` VALUES ('16478004', '王欣', '123456', '女', '1647', '3', '13-203', '18279994740', '北京市,北京市,西城区,萍乡学院');
+INSERT INTO `user` VALUES ('16478801', '彭书记', '123456', '男', '0', '1', '0', '13780563245', '北京市,北京市,朝阳区,萍乡学院');
 INSERT INTO `user` VALUES ('16478802', '彭新平', '123456', '男', '0', '2', '0', '13654206359', '北京市,北京市,朝阳区,萍乡学院');
 INSERT INTO `user` VALUES ('16478803', '罗晓娟', '123456', '女', '0', '2', '0', '18352469235', '北京市,北京市,朝阳区,萍乡学院');
 INSERT INTO `user` VALUES ('17478006', '许佳琪', '123456', '女', '1747', '4', '13-208', '15632847853', '北京市,北京市,朝阳区,萍乡学院');

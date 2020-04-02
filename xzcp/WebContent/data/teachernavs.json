@@ -14,13 +14,13 @@
         "children": [
             {
                 "title": "管理学生信息",
-                "href": "",
+                "href": "teacher/student.html",
                 "icon": "&#xe642;",
                 "spread": false
             },
             {
                 "title": "选择班委",
-                "href": "",
+                "href": "teacher/choose.html",
                 "icon": "&#xe66e;",
                 "spread": false
             }
@@ -33,21 +33,20 @@
         "spread": false,
         "children": [
             {
-                "title": "查看记录",
-                "href": "",
+                "title": "查看考评记录",
+                "href": "teacher/teacherRecord.html",
                 "icon": "&#xe60e;",
-                "spread": false,
-                "target": "_blank"
+                "spread": false
             },
             {
                 "title": "查看月分数",
-                "href": "",
+                "href": "teacher/teacherScore.html",
                 "icon": "&#xe63c;",
                 "spread": false
             },
             {
                 "title": "查看学期分数",
-                "href": "",
+                "href": "teacher/teacherTermscore.html",
                 "icon": "&#xe705;",
                 "spread": false
             }

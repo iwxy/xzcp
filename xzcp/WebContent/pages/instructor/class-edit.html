@@ -26,7 +26,6 @@
 			    <label class="layui-form-label">班主任<font color="red"> *</font></label>
 			    <div class="layui-input-block">
 			      <select name="classTeacher" id="classTeacher" lay-verify="required">
-			        <option value="" selected>请选择</option>
 			      </select>
 			    </div>
 		    </div>
@@ -55,22 +54,24 @@
             var classId = okUtils.oneValues();
 			var params = "classId=" + classId;
             
-            okUtils.ajax("/class/getClass", "get", params, true).done(
-        			function(responses) {
-        				var classes = responses.data;
-        				$("#classId").val(classes.classId);
-        				$("#className").val(classes.className);
-        				$("#classTeacher").append("<option value='"+classes.classTeacher+"' selected>"+classes.classTeacherName+"</option>");
+			okUtils.ajax("/class/getAllTeacher", "get", params, true).done(
+        			function(response) {
+        				var user = response.data;
+
+        				for(var i=0;i<user.length;i++){
+        					$("#classTeacher").append("<option value='"+user[i].userId+"'>"+user[i].userName+"</option>");
+        				}
         				form.render('select');
-        				
-	            okUtils.ajax("/class/getAllTeacher", "get", params, true).done(
-	        			function(response) {
-	        				var user = response.data;
-	
-	        				for(var i=0;i<user.length;i++){
-	        					$("#classTeacher").append("<option value='"+user[i].userId+"'>"+user[i].userName+"</option>");
-	        				}
+			
+	            okUtils.ajax("/class/getClass", "get", params, true).done(
+	        			function(responses) {
+	        				var classes = responses.data;
+	        				$("#classId").val(classes.classId);
+	        				$("#className").val(classes.className);
+	        				$("#classTeacher").val(classes.classTeacher);
 	        				form.render('select');
+        				
+	            
 	        				
 	        				form.on("submit(add)", function (data) {
 	        					if(data.classTeacher){

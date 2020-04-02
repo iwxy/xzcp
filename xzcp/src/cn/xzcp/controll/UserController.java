@@ -9,9 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.xzcp.bean.ClassMes;
+import cn.xzcp.bean.IdentityMes;
 import cn.xzcp.bean.ResponseResult;
 import cn.xzcp.bean.User;
 import cn.xzcp.bean.UserMes;
+import cn.xzcp.service.ClassService;
+import cn.xzcp.service.IdentityService;
 import cn.xzcp.service.UserService;
 
 @Controller
@@ -20,6 +24,12 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private IdentityService identityService;
+
+	@Autowired
+	private ClassService classService;
 
 	/**
 	 * 登录 通过学号查询
@@ -101,9 +111,9 @@ public class UserController {
 	 */
 	@RequestMapping("/getAllTeacher")
 	@ResponseBody
-	public ResponseResult getAllTeacher(int page, int limit) {
+	public ResponseResult getAllTeacher(UserMes user) {
 		List<UserMes> data;
-		data = userService.getPageTeacher(page, limit);
+		data = userService.getPageTeacher(user);
 		// 一共有多少条教师数据
 		int count = userService.getAllTeacher().size();
 		if (data.size() == 0) {
@@ -145,6 +155,135 @@ public class UserController {
 			return ResponseResult.build(0, "添加成功！");
 		} else {
 			return ResponseResult.build(1, "添加失败！");
+		}
+
+	}
+
+	/**
+	 * 获得某个班主任所教的所有学生的个人信息
+	 */
+	@RequestMapping("/getAllStudent")
+	@ResponseBody
+	public ResponseResult getAllStudent(UserMes user, HttpSession session) {
+		List<UserMes> data;
+		try {
+			User users = (User) session.getAttribute("user");
+			user.setUserId(users.getUserId());
+			data = userService.getPageStudent(user);
+			// 一共有多少条教师数据
+			int count = userService.getAllStudent(user.getUserId()).size();
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", count, data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
+		}
+
+	}
+
+	/**
+	 * 得到某班主任所教的所有班级的信息
+	 */
+	@RequestMapping("/getAllTClass")
+	@ResponseBody
+	public ResponseResult getAllTClass(HttpSession session) {
+		List<ClassMes> data;
+		try {
+			User user = (User) session.getAttribute("user");
+			int userId = user.getUserId();
+			data = classService.getAllTClass(userId);
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
+		}
+
+	}
+
+	/**
+	 * 得到所有班委的信息
+	 */
+	@RequestMapping("/getAllCommittee")
+	@ResponseBody
+	public ResponseResult getAllCommittee() {
+		List<IdentityMes> data;
+		data = identityService.getAllIdentity();
+		if (data.size() == 0) {
+			return ResponseResult.build(1, "无数据");
+		} else {
+			return ResponseResult.build(0, "查询成功", data);
+		}
+
+	}
+
+	/**
+	 * 添加用户
+	 */
+	@RequestMapping("/addUser")
+	@ResponseBody
+	public ResponseResult addUser(UserMes userMes) {
+
+		boolean b = userService.addUser(userMes);
+		if (b) {
+			return ResponseResult.build(0, "添加成功！");
+		} else {
+			return ResponseResult.build(1, "添加失败！");
+		}
+
+	}
+
+	/**
+	 * 通过班级、学号、姓名组合查询，得到userMes对象
+	 */
+	@RequestMapping("/seachUserCIN")
+	@ResponseBody
+	public ResponseResult seachUserCIN(UserMes user, HttpSession session) {
+		List<UserMes> data;
+
+		try {
+			User user1 = (User) session.getAttribute("user");
+			user.setUserTeacherid(user1.getUserId());
+			System.out.println(user.getUserTeacherid());
+			System.out.println(user.getUserId());
+			data = userService.seachUserCINPage(user);
+			// 一共有多少条教师数据
+			int count = userService.seachUserCIN(user).size();
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", count, data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
+		}
+
+	}
+
+	/**
+	 * 获得某个班委所在班级的所有学生的个人信息
+	 */
+	@RequestMapping("/getUClassStudent")
+	@ResponseBody
+	public ResponseResult getUClassStudent(UserMes user, HttpSession session) {
+		List<UserMes> data;
+		try {
+			UserMes users = (UserMes) session.getAttribute("user");
+			user.setUserClassid(users.getUserClassid());
+			data = userService.getPageUClassStudent(user);
+			// 一共有多少条教师数据
+			int count = userService.getUClassStudent(user).size();
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", count, data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
 		}
 
 	}

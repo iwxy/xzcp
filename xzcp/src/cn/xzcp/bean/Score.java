@@ -1,19 +1,11 @@
 package cn.xzcp.bean;
 
-import java.util.Date;
-
 public class Score {
 
-	private int scoreId;
+	protected int scoreId;
 	private int scoreStudentid;
 	private double scoreScore;
-	private Date scoreDate;
-
-	@Override
-	public String toString() {
-		return "Score [scoreId=" + scoreId + ", scoreStudentid=" + scoreStudentid + ", scoreScore=" + scoreScore
-				+ ", scoreDate=" + scoreDate + "]";
-	}
+	private String scoreDate;
 
 	public int getScoreId() {
 		return scoreId;
@@ -39,12 +31,18 @@ public class Score {
 		this.scoreScore = scoreScore;
 	}
 
-	public Date getScoreDate() {
+	public String getScoreDate() {
 		return scoreDate;
 	}
 
-	public void setScoreDate(Date scoreDate) {
+	public void setScoreDate(String scoreDate) {
 		this.scoreDate = scoreDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Score [scoreId=" + scoreId + ", scoreStudentid=" + scoreStudentid + ", scoreScore=" + scoreScore
+				+ ", scoreDate=" + scoreDate + "]";
 	}
 
 }

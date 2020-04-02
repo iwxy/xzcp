@@ -6,12 +6,10 @@ public class UserMes extends User {
 	int id;
 	String userClassName;
 	String userIdentityName;
-
-	@Override
-	public String toString() {
-		return "UserMes [id=" + id + ", userClassName=" + userClassName + ", userIdentityName=" + userIdentityName
-				+ "]";
-	}
+	int userTeacherid;
+	int limit;
+	int page;
+	int firstIndex;
 
 	public int getId() {
 		return super.userId;
@@ -35,6 +33,45 @@ public class UserMes extends User {
 
 	public void setUserIdentityName(String userIdentityName) {
 		this.userIdentityName = userIdentityName;
+	}
+
+	public int getUserTeacherid() {
+		return userTeacherid;
+	}
+
+	public void setUserTeacherid(int userTeacherid) {
+		this.userTeacherid = userTeacherid;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getFirstIndex() {
+		return (page - 1) * limit;
+	}
+
+	public void setFirstIndex(int firstIndex) {
+		this.firstIndex = firstIndex;
+	}
+
+	@Override
+	public String toString() {
+		return "UserMes [id=" + id + ", userClassName=" + userClassName + ", userIdentityName=" + userIdentityName
+				+ ", userTeacherid=" + userTeacherid + ", limit=" + limit + ", page=" + page + ", firstIndex="
+				+ firstIndex + "]";
 	}
 
 }

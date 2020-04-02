@@ -12,19 +12,19 @@
 
 	<!-- 通过学号查询，得到userMes对象 -->
 	<select id="getClass"  resultMap="classMap" >
-			select class_id,class_name,class_teacher,user_name
+			select c.*,user_name
 			from user u,class c
 			where c.class_id=#{classId} and c.class_teacher=u.user_id
 	</select>
 	
 	<!-- 查询分页班级的信息，得到classMes对象 -->
-	<select id="getPageClass" parameterType="map" resultMap="classMap" >
-		select class_id,class_name,class_teacher,user_name from class c,user u where c.class_teacher=u.user_id limit #{firstIndex} , #{limit}
+	<select id="getPageClass" parameterType="classMes" resultMap="classMap" >
+		select c.*,user_name from class c,user u where c.class_teacher=u.user_id limit #{firstIndex} , #{limit}
 	</select>
 	
 	<!-- 查询所有班级的信息，得到classMes对象 -->
 	<select id="getAllClass" resultMap="classMap" >
-		select class_id,class_name,class_teacher,user_name from class c,user u where c.class_teacher=u.user_id
+		select c.*,user_name from class c,user u where c.class_teacher=u.user_id
 	</select>
 	
 	<!-- 删除班级 -->
@@ -53,4 +53,8 @@
 		where class_id=#{classId}
 	</update>
 	
+	<!-- 得到某班主任所教的所有班级的信息，得到classMes对象 -->
+	<select id="getAllTClass" resultMap="classMap" >
+		select c.* from class c,user u where c.class_teacher=u.user_id and u.user_id=#{userId}
+	</select>
 </mapper>

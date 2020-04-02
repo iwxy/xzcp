@@ -1,8 +1,6 @@
 package cn.xzcp.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,15 +31,9 @@ public class IdentityServiceImpl implements IdentityService {
 	 * 获得分页班委的信息
 	 */
 	@Override
-	public List<IdentityMes> getPageIdentity(int page, int limit) {
+	public List<IdentityMes> getPageIdentity(IdentityMes identityMes) {
 		List<IdentityMes> list;
-		int firstIndex = (page - 1) * limit;
-		Map<String, Integer> params = new HashMap();
-		// 第一个参数是从第几条开始显示
-		params.put("firstIndex", firstIndex);
-		// 第二个参数是要显示多少条
-		params.put("limit", limit);
-		list = identityMapper.getPageIdentity(params);
+		list = identityMapper.getPageIdentity(identityMes);
 		return list;
 	}
 
@@ -52,6 +44,16 @@ public class IdentityServiceImpl implements IdentityService {
 	public List<IdentityMes> getAllIdentity() {
 		List<IdentityMes> list;
 		list = identityMapper.getAllIdentity();
+		return list;
+	}
+
+	/**
+	 * 获得除教师外所有角色的信息
+	 */
+	@Override
+	public List<IdentityMes> getAllSIdentity() {
+		List<IdentityMes> list;
+		list = identityMapper.getAllSIdentity();
 		return list;
 	}
 

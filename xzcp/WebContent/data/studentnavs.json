@@ -9,21 +9,21 @@
     
     {
         "title": "查看月分数",
-        "href": "",
+        "href": "student/studentScore.html",
         "icon": "&#xe63c;",
         "spread": true
     },
        
     {
         "title": "查看学期分数",
-        "href": "",
+        "href": "student/studentTermscore.html",
         "icon": "&#xe705;",
         "spread": true
     },
     
     {
-        "title": "查看记录",
-        "href": "",
+        "title": "查看考评记录",
+        "href": "student/studentRecord.html",
         "icon": "&#xe60e;",
         "spread": true
     }

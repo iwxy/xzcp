@@ -26,7 +26,6 @@
 			    <label class="layui-form-label">班委<font color="red"> *</font></label>
 			    <div class="layui-input-block">
 			      <select name="itemCommitteeid" id="itemCommitteeid" lay-verify="required">
-			        <option value="" selected>请选择</option>
 			      </select>
 			    </div>
 		    </div>
@@ -67,24 +66,25 @@
             var itemId = okUtils.oneValues();
 			var params = "itemId=" + itemId;
             
-            okUtils.ajax("/item/getItem", "get", params, true).done(
-        			function(responses) {
-        				var item = responses.data;
-        				$("#itemId").val(item.itemId);
-        				$("#itemName").val(item.itemName);
-        				$("#itemScore").val(item.itemScore);
-        				$("#itemDiscribe").val(item.itemDiscribe);
-        				$("#itemCommitteeid").append("<option value='"+item.itemCommitteeid+"' selected>"+item.itemCommitteeName+"</option>");
+			okUtils.ajax("/item/getAllCommittee", "get", params, true).done(
+        			function(response) {
+        				var identity = response.data;
+
+        				for(var i=0;i<identity.length;i++){
+        					$("#itemCommitteeid").append("<option value='"+identity[i].identityId+"'>"+identity[i].identityName+"</option>");
+        				}
         				form.render('select');
-        				
-	            okUtils.ajax("/item/getAllCommittee", "get", params, true).done(
-	        			function(response) {
-	        				var identity = response.data;
-	
-	        				for(var i=0;i<identity.length;i++){
-	        					$("#itemCommitteeid").append("<option value='"+identity[i].identityId+"'>"+identity[i].identityName+"</option>");
-	        				}
+			
+	            okUtils.ajax("/item/getItem", "get", params, true).done(
+	        			function(responses) {
+	        				var item = responses.data;
+	        				$("#itemId").val(item.itemId);
+	        				$("#itemName").val(item.itemName);
+	        				$("#itemScore").val(item.itemScore);
+	        				$("#itemDiscribe").val(item.itemDiscribe);
+	        				$("#itemCommitteeid").val(item.itemCommitteeid);
 	        				form.render('select');
+        				
 	        				
 	        				form.on("submit(add)", function (data) {
 	        					if(data.itemCommitteeid){

@@ -14,19 +14,19 @@
         "children": [
             {
                 "title": "查看月分数",
-                "href": "",
+                "href": "student/studentScore.html",
                 "icon": "&#xe63c;",
                 "spread": false
             },
             {
                 "title": "查看学期分数",
-                "href": "",
+                "href": "student/studentTermscore.html",
                 "icon": "&#xe705;",
                 "spread": false
             },
             {
-                "title": "查看记录",
-                "href": "",
+                "title": "查看考评记录",
+                "href": "student/studentRecord.html",
                 "icon": "&#xe60e;",
                 "spread": false
             }
@@ -40,14 +40,13 @@
         "children": [
             {
                 "title": "录入班级情况",
-                "href": "",
+                "href": "committee/record.html",
                 "icon": "&#xe654;",
-                "spread": false,
-                "target": "_blank"
+                "spread": false
             },
             {
-                "title": "管理自己记录的东西",
-                "href": "",
+                "title": "管理考评记录",
+                "href": "committee/manage.html",
                 "icon": "&#xe642;",
                 "spread": false
             }

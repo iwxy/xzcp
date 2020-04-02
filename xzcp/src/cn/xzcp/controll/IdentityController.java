@@ -37,9 +37,9 @@ public class IdentityController {
 	 */
 	@RequestMapping("/getAllIdentity")
 	@ResponseBody
-	public ResponseResult getAllIdentity(int page, int limit) {
+	public ResponseResult getAllIdentity(IdentityMes identityMes) {
 		List<IdentityMes> data;
-		data = identityService.getPageIdentity(page, limit);
+		data = identityService.getPageIdentity(identityMes);
 		// 一共有多少条身份数据
 		int count = identityService.getAllIdentity().size();
 		if (data.size() == 0) {

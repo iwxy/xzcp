@@ -1,8 +1,6 @@
 package cn.xzcp.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,15 +31,9 @@ public class ItemServiceImpl implements ItemService {
 	 * 获得分页考评项的信息
 	 */
 	@Override
-	public List<ItemMes> getPageItem(int page, int limit) {
+	public List<ItemMes> getPageItem(ItemMes itemMes) {
 		List<ItemMes> list;
-		int firstIndex = (page - 1) * limit;
-		Map<String, Integer> params = new HashMap();
-		// 第一个参数是从第几条开始显示
-		params.put("firstIndex", firstIndex);
-		// 第二个参数是要显示多少条
-		params.put("limit", limit);
-		list = itemMapper.getPageItem(params);
+		list = itemMapper.getPageItem(itemMes);
 		return list;
 	}
 
@@ -52,6 +44,16 @@ public class ItemServiceImpl implements ItemService {
 	public List<ItemMes> getAllItem() {
 		List<ItemMes> list;
 		list = itemMapper.getAllItem();
+		return list;
+	}
+
+	/**
+	 * 获得某个班委管理的所有考评项的信息
+	 */
+	@Override
+	public List<ItemMes> getCommitteeAllItem(int identityId) {
+		List<ItemMes> list;
+		list = itemMapper.getCommitteeAllItem(identityId);
 		return list;
 	}
 

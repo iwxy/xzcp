@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>学期分数</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+	<form class="layui-form" style="margin-top:20px;">
+		
+	<div class="demoTable">
+		<div class="layui-inline">
+	      <label class="layui-form-label">班级</label>
+	      <div class="layui-input-inline">
+	        <select name="termscoreClassid" id="termscoreClassid">
+	          <option value="0" selected>请选择班级</option>
+	        </select>
+	      </div>
+		</div>
+		<div class="layui-inline">
+	      <label class="layui-form-label">学期</label>
+	      <div class="layui-input-inline">
+	        <select name="termscoreDate" id="termscoreDate">
+	          <option value="" selected>请选择学期</option>
+	        </select>
+	      </div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">学号</label>
+			<div class="layui-input-inline">
+				<input type="text" name="termscoreStudentid" id="termscoreStudentid" autocomplete="off" class="layui-input"  placeholder="请输入学号">
+			</div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-inline">
+				<input type="text" name="termscoreStudentName" id="termscoreStudentName" autocomplete="off" class="layui-input"  placeholder="请输入姓名">
+			</div>
+	    </div>
+	    
+		<button class="layui-btn" lay-submit lay-filter="seach" style="margin-left:50px;">搜索</button>
+	</div>
+	</form>
+	
+    <div class="ok-body">
+       
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+    
+	    let initData;
+	
+	    function initForm(data) {
+	        let jsonString = JSON.stringify(data);
+	        initData = JSON.parse(jsonString);
+	    }
+
+        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "okMock"], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let okMock = layui.okMock;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            form.val("filter", initData);
+            
+            let userTable = table.render({
+                elem: '#tableId', //表格标签的id
+                url: okMock.api.listInstructorTermscore,//url写这里，连接后台
+                limit: 10, //默认每页显示多少条数据
+                page: true, // 是否分页
+                toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+                defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+                size: "sm",
+                cols: [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "termscoreStudentid", title: "学号", width: 160, sort: true},
+                    {field: "termscoreStudentName", title: "姓名", width: 100},
+                    {field: "termscoreClassName", title: "班级", width: 100},
+                    {field: "termscoreDate", title: "时间", width: 100},
+                    {field: "termscoreScore", title: "分数", width: 100}
+	                ]],
+                done: function (res, curr, count) {
+                    console.info(res, curr, count);
+                }
+            });
+
+            
+			var params="";
+			
+			okUtils.ajax("/termscore/getAllClass", "get", params, true).done(
+        			function(response) {
+        				var clazz = response.data;
+        				for(var i=0;i<clazz.length;i++){
+        					$("#termscoreClassid").append("<option value='"+clazz[i].classId+"'>"+clazz[i].className+"</option>");
+        				}
+        				form.render('select'); 
+        				
+        				var params="";
+        				
+        				okUtils.ajax("/termscore/getAllDate", "get", params, true).done(
+        	        			function(response) {
+        	        				var termscore = response.data;
+        	        				for(var i=0;i<termscore.length;i++){
+        	        					$("#termscoreDate").append("<option value='"+termscore[i].termscoreDate+"'>"+termscore[i].termscoreDate+"</option>");
+        	        				}
+        	        				form.render('select'); 
+        				
+						            form.on("submit(seach)", function (data) {
+						            	
+						            	if(data.field.termscoreClassid==""){
+						            		data.field.termscoreClassid=0;
+						            	}
+						            	if(data.field.termscoreStudentid==""){
+						            		data.field.termscoreStudentid=0;
+						            	}
+						                
+						            	let userTable = table.render({
+						                    elem: '#tableId', //表格标签的id
+						                    url: okMock.api.listSeachInstructorTermscore,//url写这里，连接后台
+						                    limit: 10, //默认每页显示多少条数据
+						                    page: true, // 是否分页
+						                    toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+						                    defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+						                    size: "sm",
+						                    method:'post',
+						                    where: {
+						                    	termscoreClassid:data.field.termscoreClassid,
+						                        termscoreDate:data.field.termscoreDate,
+						                        termscoreStudentid:data.field.termscoreStudentid,
+						                    	termscoreStudentName:data.field.termscoreStudentName
+						                      },
+						                    cols: [[
+						                    	{type: "checkbox", fixed: "left"},
+						                        {field: "termscoreStudentid", title: "学号", width: 160, sort: true},
+						                        {field: "termscoreStudentName", title: "姓名", width: 100},
+						                        {field: "termscoreClassName", title: "班级", width: 100},
+						                        {field: "termscoreDate", title: "时间", width: 100},
+						                        {field: "termscoreScore", title: "分数", width: 100}
+						                    ]],
+						                    done: function (res, curr, count) {
+						                        console.info(res, curr, count);
+						                    }
+						                });
+						            	
+						                return false;
+						            });
+			            
+			        			}).fail(function (error) {
+			                        console.log(error)
+			                    });
+        				
+        			}).fail(function (error) {
+                        console.log(error)
+                    });
+			     
+        });
+    </script>
+    <!-- 头工具栏模板 -->
+    <script type="text/html" id="toolbarTpl">
+        <div class="layui-btn-container">
+            <font class="layui-btn-sm" style="font-size:15px;">查看各个学期的分数</font>
+        </div>
+    </script>
+    <!-- 行工具栏模板 -->
+    <!-- <script type="text/html" id="operationTpl">
+        <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+        <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    </script> -->
+    
+</body>
+</html>

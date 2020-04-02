@@ -1,7 +1,6 @@
 package cn.xzcp.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import cn.xzcp.bean.IdentityMes;
 
@@ -10,12 +9,17 @@ public interface IdentityMapper {
 	/**
 	 * 获得分页班委的信息
 	 */
-	List<IdentityMes> getPageIdentity(Map<String, Integer> params);
+	List<IdentityMes> getPageIdentity(IdentityMes identityMes);
 
 	/**
 	 * 获得所有班委的信息
 	 */
 	List<IdentityMes> getAllIdentity();
+
+	/**
+	 * 获得除教师外所有角色的信息
+	 */
+	List<IdentityMes> getAllSIdentity();
 
 	/**
 	 * 删除班委

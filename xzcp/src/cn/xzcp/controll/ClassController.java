@@ -42,9 +42,9 @@ public class ClassController {
 	 */
 	@RequestMapping("/getAllClass")
 	@ResponseBody
-	public ResponseResult getAllClass(int page, int limit) {
+	public ResponseResult getAllClass(ClassMes classMes) {
 		List<ClassMes> data;
-		data = classService.getPageClass(page, limit);
+		data = classService.getPageClass(classMes);
 		// 一共有多少条班级数据
 		int count = classService.getAllClass().size();
 		if (data.size() == 0) {

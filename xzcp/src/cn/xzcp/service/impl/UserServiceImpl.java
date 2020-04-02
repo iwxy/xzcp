@@ -1,8 +1,6 @@
 package cn.xzcp.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,15 +59,9 @@ public class UserServiceImpl implements UserService {
 	 * 获得分页教师的个人信息
 	 */
 	@Override
-	public List<UserMes> getPageTeacher(int page, int limit) {
+	public List<UserMes> getPageTeacher(UserMes user) {
 		List<UserMes> list;
-		int firstIndex = (page - 1) * limit;
-		Map<String, Integer> params = new HashMap();
-		// 第一个参数是从第几条开始显示
-		params.put("firstIndex", firstIndex);
-		// 第二个参数是要显示多少条
-		params.put("limit", limit);
-		list = userMapper.getPageTeacher(params);
+		list = userMapper.getPageTeacher(user);
 		return list;
 	}
 
@@ -110,6 +102,77 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * 获得分页某个班主任所教的学生的个人信息
+	 */
+	@Override
+	public List<UserMes> getPageStudent(UserMes user) {
+		List<UserMes> list;
+		list = userMapper.getPageStudent(user);
+		return list;
+	}
+
+	/**
+	 * 获得某个班主任所教的所有学生的信息
+	 */
+	@Override
+	public List<UserMes> getAllStudent(int userId) {
+		List<UserMes> list;
+		list = userMapper.getAllStudent(userId);
+		return list;
+	}
+
+	/**
+	 * 通过班级、学号、姓名组合查询，得到userMes对象
+	 */
+	@Override
+	public List<UserMes> seachUserCIN(UserMes user) {
+		List<UserMes> list;
+		list = userMapper.seachUserCIN(user);
+		return list;
+	}
+
+	/**
+	 * 通过班级、学号、姓名组合查询分页，得到userMes对象
+	 */
+	@Override
+	public List<UserMes> seachUserCINPage(UserMes user) {
+		List<UserMes> list;
+		list = userMapper.seachUserCINPage(user);
+		return list;
+
+	}
+
+	/**
+	 * 获得分页某个班委所在班级的所有学生的个人信息
+	 */
+	@Override
+	public List<UserMes> getPageUClassStudent(UserMes user) {
+		List<UserMes> list;
+		list = userMapper.getPageUClassStudent(user);
+		return list;
+	}
+
+	/**
+	 * 获得某个班委所在班级的所有学生的个人信息
+	 */
+	@Override
+	public List<UserMes> getUClassStudent(UserMes user) {
+		List<UserMes> list;
+		list = userMapper.getUClassStudent(user);
+		return list;
+	}
+
+	/**
+	 * 获得整个系统的所有学生的个人信息
+	 */
+	@Override
+	public List<UserMes> getAllStudents() {
+		List<UserMes> list;
+		list = userMapper.getAllStudents();
+		return list;
 	}
 
 }

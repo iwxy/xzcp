@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>选择班委</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+    <div class="ok-body">
+       	<!--form表单-->
+        <form class="layui-form layui-form-pane ok-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userId" id="userId" placeholder="请输入学号" autocomplete="off" disabled class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userName" id="userName" placeholder="请输入姓名" autocomplete="off" disabled class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+			      <input type="text" name="userSex" id="userSex" placeholder="请输入性别" autocomplete="off" disabled class="layui-input">
+			    </div>
+            </div>
+            <div class="layui-form-item">
+			    <label class="layui-form-label">班级</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="userClassName" id="userClassName" placeholder="请输入班级" autocomplete="off" disabled class="layui-input">
+			    </div>
+		    </div>
+		    <div class="layui-form-item">
+			    <label class="layui-form-label">职位</label>
+			    <div class="layui-input-block">
+			      <select name="userIdentity" id="userIdentity" lay-verify="required">
+			        <option value="3" selected>学生</option>
+			      </select>
+			    </div>
+		    </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="edit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        let initData;
+
+        function initForm(data) {
+            let jsonString = JSON.stringify(data);
+            initData = JSON.parse(jsonString);
+        }
+
+        layui.use(["element", "form", "layer", "upload" ,"laydate", "okLayer", "okUtils", "okAddlink"], function () {
+        	let form = layui.form;
+            let layer = layui.layer;
+        	let upload = layui.upload;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let $ = layui.jquery;
+            let $form = $('form');
+		    
+ 			var param="";
+            
+			 okUtils.ajax("/user/getAllCommittee", "get", param, true).done(
+       			function(response) {
+       				var identity = response.data;
+		        				
+   					for(var i=0;i<identity.length;i++){
+   						$("#userIdentity").append("<option value='"+identity[i].identityId+"'>"+identity[i].identityName+"</option>");
+   					}
+    				form.render('select');
+
+	        		var userId = okUtils.oneValues();
+					var params = "userId=" + userId;
+	            
+	           		okUtils.ajax("/user/getUser", "post", params, true).done(
+	        			function(response) {
+	        				var user = response.data;
+	
+	        				$("#userId").val(user.userId);
+	        				$("#userName").val(user.userName);
+	        				$("#userClassName").val(user.userClassName);
+	        				$("#userSex").val(user.userSex);
+	        				$("#userIdentity").val(user.userIdentity);
+	        				form.render('select');
+	
+				            form.on("submit(edit)", function (data) {
+				            	
+				                okUtils.ajax("/user/changeUser", "post", data.field, true).done(function (response) {
+				                    console.log(response);
+				                    okLayer.greenTickMsg("修改成功", function () {
+				                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+				                    });
+				                }).fail(function (error) {
+				                    console.log(error)
+				                });
+				                return false;
+				            });
+				            
+	        			 }).fail(function (error) {
+			                    console.log(error)
+			             });
+	            		
+           			}).fail(function (error) {
+   	                    console.log(error)
+   	                });
+        	})
+    </script>
+</body>
+</html>

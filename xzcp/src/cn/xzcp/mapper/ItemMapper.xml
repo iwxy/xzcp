@@ -14,23 +14,30 @@
 
 	<!-- 通过考评项id查询，得到itemMes对象 -->
 	<select id="getItem"  resultMap="itemMap" >
-		select item_id,item_name,item_discribe,item_committeeid,item_score,identity_name
+		select it.*,identity_name
 		from identity id,item it
 		where it.item_id=#{itemId} and it.item_committeeid=id.identity_id
 	</select>
 	
 	<!-- 查询分页考评项的信息，得到itemMes对象 -->
-	<select id="getPageItem" parameterType="map" resultMap="itemMap" >
-		select item_id,item_name,item_discribe,item_committeeid,item_score,identity_name
+	<select id="getPageItem" parameterType="itemMes" resultMap="itemMap" >
+		select it.*,identity_name
 		from identity id,item it
 		where it.item_committeeid=id.identity_id limit #{firstIndex} , #{limit}
 	</select>
 	
 	<!-- 查询所有考评项的信息，得到itemMes对象 -->
 	<select id="getAllItem" resultMap="itemMap" >
-		select item_id,item_name,item_discribe,item_committeeid,item_score,identity_name
+		select it.*,identity_name
 		from identity id,item it
 		where it.item_committeeid=id.identity_id
+	</select>
+	
+	<!-- 查询某个班委管理的所有考评项的信息，得到itemMes对象 -->
+	<select id="getCommitteeAllItem" resultMap="itemMap" parameterType="int">
+		select it.*,identity_name
+		from identity id,item it
+		where it.item_committeeid=id.identity_id and it.item_committeeid=#{identityId}
 	</select>
 	
 	<!-- 删除考评项 -->

@@ -14,13 +14,18 @@
 	</select>
 	
 	<!-- 查询分页班委的信息，得到identityMes对象 -->
-	<select id="getPageIdentity" parameterType="map" resultMap="identityMap" >
+	<select id="getPageIdentity" parameterType="identityMes" resultMap="identityMap" >
 		select * from identity where identity_id>3 limit #{firstIndex} , #{limit}
 	</select>
 	
 	<!-- 查询所有班委的信息，得到identityMes对象 -->
 	<select id="getAllIdentity" resultMap="identityMap" >
 		select * from identity where identity_id>3
+	</select>
+	
+	<!-- 查询除教师外所有角色的信息，得到identityMes对象 -->
+	<select id="getAllSIdentity" resultMap="identityMap" >
+		select * from identity where identity_id>2
 	</select>
 	
 	<!-- 删除班委 -->

@@ -14,12 +14,17 @@ public interface IdentityService {
 	/**
 	 * 获得分页班委的信息
 	 */
-	List<IdentityMes> getPageIdentity(int page, int limit);
+	List<IdentityMes> getPageIdentity(IdentityMes identityMes);
 
 	/**
 	 * 获得所有班委的信息
 	 */
 	List<IdentityMes> getAllIdentity();
+
+	/**
+	 * 获得除教师外所有角色的信息
+	 */
+	List<IdentityMes> getAllSIdentity();
 
 	/**
 	 * 批量删除班委，也可单个

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xzcp.mapper.RecordMapper">
+	<resultMap type="cn.xzcp.bean.RecordMes" id="recordMap">
+		<result column="record_id" property="recordId"/>
+		<result column="record_committeeid" property="recordCommitteeid"/>
+		<result column="record_studentid" property="recordStudentid"/>
+		<result column="record_itemid" property="recordItemid"/>
+		<result column="record_times" property="recordTimes"/>
+		<result column="record_discribe" property="recordDiscribe"/>
+		<result column="record_date" property="recordDate"/>
+		<result column="record_committeeName" property="recordCommitteeName"/>
+		<result column="record_studentName" property="recordStudentName"/>
+		<result column="item_name" property="recordItemName"/>
+		<result column="item_score" property="recordScore"/>
+		<result column="class_id" property="recordClassid"/>
+		<result column="class_name" property="recordClassName"/>
+		
+	</resultMap>
+	
+	<!-- 添加记录 -->
+	<insert id="addRecord" parameterType="recordMes">
+		insert into record(record_committeeid,record_studentid,record_itemid,record_times,record_discribe,record_date
+		) values(
+			#{recordCommitteeid},
+			#{recordStudentid},
+			#{recordItemid}, 
+			#{recordTimes},
+			#{recordDiscribe},
+			#{recordDate}
+		)
+    </insert>
+    
+	<!-- 分页查询某个班委所记录的所有考评信息，也可以通过学号、时间组合查询，得到recordMes对象 -->
+	<select id="getPageCommitteeRecord" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,item.item_name,item_score
+		from record,item,user
+		<where>
+			record_committeeid=#{recordCommitteeid} and record_studentid=user.user_id and record_itemid=item.item_id
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordDate!=''">and record_date=#{recordDate}</if>
+		</where>
+		order by record_date desc
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 查询某个班委所记录的所有考评信息，也可以通过学号、时间组合查询，得到recordMes对象 -->
+	<select id="getAllCommitteeRecord" parameterType="user" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,item.item_name,item_score
+		from record,item,user
+		<where>
+			record_committeeid=#{recordCommitteeid} and record_studentid=user.user_id and record_itemid=item.item_id
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordDate!=''">and record_date=#{recordDate}</if>
+		</where>	
+	</select>
+	
+	 <!-- 批量删除记录，也可单个 -->
+	 <delete id="deleteRecord" parameterType="int">
+		delete from record where record_id=#{recordId}
+     </delete>
+     
+	<!-- 通过recordId查询，得到recordMes对象 -->
+	<select id="getRecordById" parameterType="int" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users
+		where record_id=#{recordId} and record_studentid=user.user_id and record_committeeid=users.user_id and record_itemid=item.item_id
+	</select>
+	
+	<!-- 修改考评记录的信息 -->
+	<update id="changeRecord" parameterType="recordMes">
+		update record
+		<set>
+			<if test="recordCommitteeid!=0">record_committeeid=#{recordCommitteeid},</if>
+			<if test="recordStudentid!=0">record_studentid=#{recordStudentid},</if>
+			<if test="recordItemid!=0">record_itemid=#{recordItemid},</if>
+			<if test="recordTimes!=0">record_times=#{recordTimes},</if>
+			<if test="recordDiscribe!=null">record_discribe=#{recordDiscribe},</if>
+			<if test="recordDate!=null">record_date=#{recordDate}</if>
+				
+		</set>
+		where record_id=#{recordId}
+	</update>
+	
+	<!-- 分页获得某个学生的记录，也可以通过起止时间查询，得到recordMes对象 -->
+	<select id="getPageRecordS" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users
+		<where>
+			record_studentid=#{recordStudentid} and user.user_id=#{recordStudentid} and record_committeeid=users.user_id and record_itemid=item.item_id
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+		</where>
+		order by record_date desc
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 获得某个学生所有的记录，也可以通过起止时间查询，得到recordMes对象 -->
+	<select id="getAllRecordS" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users
+		<where>
+			record_studentid=#{recordStudentid} and user.user_id=#{recordStudentid} and record_committeeid=users.user_id and record_itemid=item.item_id
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+		</where>
+	</select>
+	
+	<!-- 分页获得所有学生的所有记录，也可以通过班级，起止时间，学号，姓名，考评项查询，得到recordMes对象 -->
+	<select id="getPageRecordI" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score,class_id,class_name
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users,class
+		<where>
+			record_studentid=user.user_id and record_committeeid=users.user_id and record_itemid=item.item_id and user.user_classid=class.class_id
+			<if test="recordClassid!=0">and class_id=#{recordClassid}</if>
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordStudentName!=''">and user.user_name=#{recordStudentName}</if>
+			<if test="recordItemid!=0">and record_itemid=#{recordItemid}</if>
+		</where>
+		order by record_date desc
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 获得所有学生的所有记录，也可以通过班级，起止时间，学号，姓名，考评项查询，得到recordMes对象 -->
+	<select id="getAllRecordI" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score,class_id,class_name
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users,class
+		<where>
+			record_studentid=user.user_id and record_committeeid=users.user_id and record_itemid=item.item_id and user.user_classid=class.class_id
+			<if test="recordClassid!=0">and class_id=#{recordClassid}</if>
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordStudentName!=''">and user.user_name=#{recordStudentName}</if>
+			<if test="recordItemid!=0">and record_itemid=#{recordItemid}</if>
+		</where>
+	</select>
+	
+	<!-- 分页获得某班主任所教的所有学生的所有记录，也可以通过班级，起止时间，学号，姓名，考评项查询，得到recordMes对象 -->
+	<select id="getPageRecordT" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score,class_id,class_name
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users,class
+		<where>
+			record_studentid=user.user_id and record_committeeid=users.user_id and record_itemid=item.item_id and user.user_classid=class.class_id  and class_teacher=#{recordTeacherid}
+			<if test="recordClassid!=0">and class_id=#{recordClassid}</if>
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordStudentName!=''">and user.user_name=#{recordStudentName}</if>
+			<if test="recordItemid!=0">and record_itemid=#{recordItemid}</if>
+		</where>
+		order by record_date desc
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 获得某班主任说教的所有学生的所有记录，也可以通过班级，起止时间，学号，姓名，考评项查询，得到recordMes对象 -->
+	<select id="getAllRecordT" parameterType="recordMes" resultMap="recordMap" >
+		select record.*,user.user_name as record_studentName,users.record_committeeName,item.item_name,item_score,class_id,class_name
+		from record,item,user,(select user.user_id,user.user_name as record_committeeName from user) as users,class
+		<where>
+			record_studentid=user.user_id and record_committeeid=users.user_id and record_itemid=item.item_id and user.user_classid=class.class_id  and class_teacher=#{recordTeacherid}
+			<if test="recordClassid!=0">and class_id=#{recordClassid}</if>
+			<if test="recordDate!='' and recordDatel==''">and record_date=#{recordDate}</if>
+			<if test="recordDate=='' and recordDatel!=''">and record_date=#{recordDatel}</if>
+			<if test="recordDatel!='' and recordDate!=''">and record_date between #{recordDate} and #{recordDatel}</if>
+			<if test="recordStudentid!=0">and record_studentid=#{recordStudentid}</if>
+			<if test="recordStudentName!=''">and user.user_name=#{recordStudentName}</if>
+			<if test="recordItemid!=0">and record_itemid=#{recordItemid}</if>
+		</where>
+	</select>
+	
+</mapper>

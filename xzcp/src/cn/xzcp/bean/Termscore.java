@@ -2,7 +2,7 @@ package cn.xzcp.bean;
 
 public class Termscore {
 
-	private int termscoreId;
+	protected int termscoreId;
 	private int termscoreStudentid;
 	private double termscoreScore;
 	private String termscoreDate;

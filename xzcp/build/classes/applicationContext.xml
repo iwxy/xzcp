@@ -53,9 +53,50 @@
 	   <property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
+	<!-- 配置基于注解的声明式事务 @Transactional-->
+    <tx:annotation-driven transaction-manager="txManager" />
+	
 	<!-- 配置注解扫描 -->
 	<context:component-scan base-package="cn.xzcp.service"></context:component-scan>
     
     <!-- 引入其他spring配置文件 -->
 	<!-- <import resource="classpath:bean.xml"/> -->
+	
+	<!--配置触发器任务-->  
+	<!-- 配置需要定时的bean类 -->  
+	 <bean id="scoreTrigger" class="cn.xzcp.utils.ScoreTrigger"></bean>  
+	   
+	  <!-- 配置任务的具体类和方法 -->  
+	 <bean id="startWorkTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+	  <!-- 要调用的bean -->  
+	  <property name="targetObject" ref="scoreTrigger"></property>   
+	  <!-- 要调用的Method -->  
+	  <property name="targetMethod" value="perform"></property>  
+	  <!-- 是否并发,false表示 如果发生错误也不影响下一次的调用 -->  
+	  <property name="concurrent" value="false"></property>  
+	 </bean>  
+	   
+	 <!-- 配置一个触发器，每月一号的00：01触发 -->  
+	 <bean id="startWorkTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+	  <property name="jobDetail" ref="startWorkTask"></property>  
+	  <!--时间表达式，0 分 时 日，0 1 0 1代表每月的1日0时1分-->
+	  <property name="cronExpression" value="0 0 0 1 * ?"></property> <!--时间表达式-->  
+	 </bean>  
+	    
+	 <!-- 总调度,用于启动定时器 -->  
+	 <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+	  <property name="triggers" >  
+	   <list>  
+	    <ref bean="startWorkTrigger"/>  
+	   </list>  
+	  </property>  
+	 </bean>  
+	 
+	 <bean id="userService" class="cn.xzcp.service.impl.UserServiceImpl"></bean>
+	 
+	 <bean id="scoreService" class="cn.xzcp.service.impl.ScoreServiceImpl"></bean>
+	 
+	 <bean id="termscoreService" class="cn.xzcp.service.impl.TermscoreServiceImpl"></bean>
+	<!--配置触发器任务结束--> 
+	
 </beans>

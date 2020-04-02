@@ -1,8 +1,6 @@
 package cn.xzcp.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,15 +31,9 @@ public class ClassServiceImpl implements ClassService {
 	 * 获得分页班级的信息
 	 */
 	@Override
-	public List<ClassMes> getPageClass(int page, int limit) {
+	public List<ClassMes> getPageClass(ClassMes classMes) {
 		List<ClassMes> list;
-		int firstIndex = (page - 1) * limit;
-		Map<String, Integer> params = new HashMap();
-		// 第一个参数是从第几条开始显示
-		params.put("firstIndex", firstIndex);
-		// 第二个参数是要显示多少条
-		params.put("limit", limit);
-		list = classMapper.getPageClass(params);
+		list = classMapper.getPageClass(classMes);
 		return list;
 	}
 
@@ -95,6 +87,16 @@ public class ClassServiceImpl implements ClassService {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * 得到某班主任所教的所有班级的信息
+	 */
+	@Override
+	public List<ClassMes> getAllTClass(int userId) {
+		List<ClassMes> list;
+		list = classMapper.getAllTClass(userId);
+		return list;
 	}
 
 }

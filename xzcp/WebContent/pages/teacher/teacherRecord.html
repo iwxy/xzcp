@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查看记录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+	<form class="layui-form" style="margin-top:20px;margin-left:80px;">
+		
+	<div class="demoTable">
+		<div class="layui-inline">
+	      <label class="layui-form-label">班级</label>
+	      <div class="layui-input-inline">
+	        <select name="recordClassid" id="recordClassid">
+	          <option value="0" selected>请选择班级</option>
+	        </select>
+	      </div>
+		</div>
+		<div class="layui-inline">
+	      <label class="layui-form-label">起始日期</label>
+	      <div class="layui-input-inline">
+	      	<input type="text" class="layui-input" name="recordDates" id="recordDates" placeholder="请输入日期">
+	      </div>
+		</div>
+		<div class="layui-inline">
+	      <label class="layui-form-label">截止日期</label>
+	      <div class="layui-input-inline">
+	      	<input type="text" class="layui-input" name="recordDatel" id="recordDatel" placeholder="请输入日期">
+	      </div>
+		</div>
+		<div class="layui-inline" style="margin-left:130px">
+		</div>
+		<div class="layui-inline" style="margin-top:20px">
+			<label class="layui-form-label">学号</label>
+			<div class="layui-input-inline">
+				<input type="text" name="recordStudentid" id="recordStudentid" autocomplete="off" class="layui-input"  placeholder="请输入学号">
+			</div>
+		</div>
+		<div class="layui-inline" style="margin-top:20px">
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-inline">
+				<input type="text" name="recordStudentName" id="recordStudentName" autocomplete="off" class="layui-input"  placeholder="请输入姓名">
+			</div>
+	    </div>
+	    <div class="layui-inline" style="margin-top:20px">
+	      <label class="layui-form-label">考评项</label>
+	      <div class="layui-input-inline">
+	        <select name="recordItemid" id="recordItemid">
+	          <option value="0" selected>请选择考评项</option>
+	        </select>
+	      </div>
+		</div>
+	    
+		<button class="layui-btn" lay-submit lay-filter="seach" style="margin-top:20px; margin-left:50px;">搜索</button>
+	</div>
+	</form>
+	
+    <div class="ok-body">
+       
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+    
+	    let initData;
+	
+	    function initForm(data) {
+	        let jsonString = JSON.stringify(data);
+	        initData = JSON.parse(jsonString);
+	    }
+
+        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "okMock"], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let okMock = layui.okMock;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            form.val("filter", initData);
+            
+          	//开启公历节日
+            laydate.render({
+              elem: '#recordDates'
+              ,calendar: true
+            });
+          	
+          //开启公历节日
+            laydate.render({
+              elem: '#recordDatel'
+              ,calendar: true
+            });
+            
+            let userTable = table.render({
+                elem: '#tableId', //表格标签的id
+                url: okMock.api.listTeacherRecord,//url写这里，连接后台
+                limit: 10, //默认每页显示多少条数据
+                page: true, // 是否分页
+                toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+                defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+                size: "sm",
+                cols: [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "recordStudentid", title: "学号", width: 160, sort: true},
+                    {field: "recordStudentName", title: "姓名", width: 100},
+                    {field: "recordClassName", title: "班级", width: 100},
+                    {field: "recordCommitteeName", title: "记录人", width: 100},
+                    {field: "recordItemName", title: "考评项", width: 100},
+                    {field: "recordDate", title: "时间", width: 100},
+                    {field: "recordTimes", title: "次数", width: 100},
+                    {field: "recordScore", title: "分值", width: 100},
+                    {field: "recordDiscribe", title: "备注", width: 100}
+	                ]],
+                done: function (res, curr, count) {
+                    console.info(res, curr, count);
+                }
+            });
+
+			var params="";
+            
+            okUtils.ajax("/record/getAllTClass", "get", params, true).done(
+        			function(response) {
+        				var clazz = response.data;
+        				for(var i=0;i<clazz.length;i++){
+        					$("#recordClassid").append("<option value='"+clazz[i].classId+"'>"+clazz[i].className+"</option>");
+        				}
+        				form.render('select');
+        				
+        				var params="";
+        	            
+        	            okUtils.ajax("/record/getAllItem", "get", params, true).done(
+        	        			function(response) {
+        	        				var item = response.data;
+        	        				for(var i=0;i<item.length;i++){
+        	        					$("#recordItemid").append("<option value='"+item[i].itemId+"'>"+item[i].itemName+"</option>");
+        	        				}
+        	        				form.render('select');
+
+
+						            form.on("submit(seach)", function (data) {
+						            	if(data.field.recordClassid==""){
+						            		data.field.recordClassid=0;
+						            	}
+						            	if(data.field.recordStudentid==""){
+						            		data.field.recordStudentid=0;
+						            	}
+						            	if(data.field.recordItemid==""){
+						            		data.field.recordItemid=0;
+						            	}
+						                
+						            	let userTable = table.render({
+						                    elem: '#tableId', //表格标签的id
+						                    url: okMock.api.listSeachTeacherRecord,//url写这里，连接后台
+						                    limit: 10, //默认每页显示多少条数据
+						                    page: true, // 是否分页
+						                    toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+						                    defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+						                    size: "sm",
+						                    method:'post',
+						                    where: {
+						                    	recordClassid:data.field.recordClassid,
+						                    	recordDates:data.field.recordDates,
+						                    	recordDatel:data.field.recordDatel,
+						                    	recordStudentid:data.field.recordStudentid,
+						                    	recordStudentName:data.field.recordStudentName,
+						                    	recordItemid:data.field.recordItemid
+						                      },
+						                    cols: [[
+						                    	{type: "checkbox", fixed: "left"},
+						                        {field: "recordStudentid", title: "学号", width: 160, sort: true},
+						                        {field: "recordStudentName", title: "姓名", width: 100},
+						                        {field: "recordClassName", title: "班级", width: 100},
+						                        {field: "recordCommitteeName", title: "记录人", width: 100},
+						                        {field: "recordItemName", title: "考评项", width: 100},
+						                        {field: "recordDate", title: "时间", width: 100},
+						                        {field: "recordTimes", title: "次数", width: 100},
+						                        {field: "recordScore", title: "分值", width: 100},
+						                        {field: "recordDiscribe", title: "备注", width: 100}
+						                    ]],
+						                    done: function (res, curr, count) {
+						                        console.info(res, curr, count);
+						                    }
+						                });
+						            	
+						                return false;
+						            });
+						            
+        	        			}).fail(function (error) {
+        	                        console.log(error)
+        	                    });
+        			}).fail(function (error) {
+                        console.log(error)
+                    });
+			     
+        });
+    </script>
+    <!-- 头工具栏模板 -->
+    <script type="text/html" id="toolbarTpl">
+        <div class="layui-btn-container">
+            <font class="layui-btn-sm" style="font-size:15px;">查看详细记录</font>
+        </div>
+    </script>
+    
+</body>
+</html>

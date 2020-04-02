@@ -14,7 +14,7 @@ public interface ClassService {
 	/**
 	 * 获得分页班级的信息
 	 */
-	List<ClassMes> getPageClass(int page, int limit);
+	List<ClassMes> getPageClass(ClassMes classMes);
 
 	/**
 	 * 获得所有班级的信息
@@ -35,5 +35,10 @@ public interface ClassService {
 	 * 修改班级信息
 	 */
 	public boolean changeClass(ClassMes classMes);
+
+	/**
+	 * 得到某班主任所教的所有班级的信息
+	 */
+	List<ClassMes> getAllTClass(int userId);
 
 }

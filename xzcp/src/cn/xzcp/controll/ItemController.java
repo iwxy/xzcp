@@ -42,9 +42,9 @@ public class ItemController {
 	 */
 	@RequestMapping("/getAllItem")
 	@ResponseBody
-	public ResponseResult getAllItem(int page, int limit) {
+	public ResponseResult getAllItem(ItemMes itemMes) {
 		List<ItemMes> data;
-		data = itemService.getPageItem(page, limit);
+		data = itemService.getPageItem(itemMes);
 		// 一共有多少条考评项数据
 		int count = itemService.getAllItem().size();
 		if (data.size() == 0) {
