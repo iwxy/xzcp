@@ -23,9 +23,9 @@ public class Test1 {
 		System.out.println(userController);
 		System.out.println(userController.getAllCommittee());
 
-		System.out.println(userService.getAllStudent(16478803));
+		System.out.println(userService.getAllTStudent(16478803));
 
-		list = userService.getAllStudent(16478803);
+		list = userService.getAllTStudent(16478803);
 		System.out.println(list.get(0).getUserName());
 
 	}

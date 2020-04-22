@@ -8,7 +8,9 @@ layui
 
 							listTeacher : "http://localhost:7050/xzcp/user/getAllTeacher",
 							listUClassStudent : "http://localhost:7050/xzcp/user/getUClassStudent",
+							listTStudent : "http://localhost:7050/xzcp/user/getAllTStudent",
 							listStudent : "http://localhost:7050/xzcp/user/getAllStudent",
+							listSeachTUserCIN : "http://localhost:7050/xzcp/user/seachTUserCIN",
 							listSeachUserCIN : "http://localhost:7050/xzcp/user/seachUserCIN",
 							listClass : "http://localhost:7050/xzcp/class/getAllClass",
 							listItem : "http://localhost:7050/xzcp/item/getAllItem",

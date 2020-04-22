@@ -79,7 +79,7 @@
     </insert>
     
     <!-- 查询分页某个班主任所教的学生信息，得到userMes对象 -->
-	<select id="getPageStudent" parameterType="userMes" resultMap="userMap" >
+	<select id="getPageTStudent" parameterType="userMes" resultMap="userMap" >
 		select user.*,class_name,identity_name
 		from user,identity,(select * from class where class.class_teacher=#{userId}) as clas
 		where user.user_identity=identity.identity_id and user.user_classid=clas.class_id
@@ -87,14 +87,29 @@
 	</select>
 	
 	<!-- 查询某个班主任所教的所有学生的个人信息，得到userMes对象 -->
-	<select id="getAllStudent" resultMap="userMap" >
+	<select id="getAllTStudent" resultMap="userMap" >
 		select user.*,class_name,identity_name
 		from user,identity,(select * from class where class.class_teacher=#{userId}) as clas
 		where user.user_identity=identity.identity_id and user.user_classid=clas.class_id
 	</select>
 	
-	<!-- 通过班级、学号、姓名组合查询，得到userMes对象 -->
-	<select id="seachUserCIN" resultMap="userMap">
+	<!-- 查询分页所有学生信息，得到userMes对象 -->
+	<select id="getPageStudent" parameterType="userMes" resultMap="userMap" >
+		select user.*,class_name,identity_name
+		from user,identity,class
+		where user.user_identity=identity.identity_id and user.user_classid=class.class_id and user.user_identity>2
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 查询所有学生的个人信息，得到userMes对象 -->
+	<select id="getAllStudent" resultMap="userMap" >
+		select user.*,class_name,identity_name
+		from user,identity,class
+		where user.user_identity=identity.identity_id and user.user_classid=class.class_id and user.user_identity>2
+	</select>
+	
+	<!-- 教师通过班级、学号、姓名组合查询，只能查询某些班级的学生信息，得到userMes对象 -->
+	<select id="seachTUserCIN" resultMap="userMap">
 		select user.*,class_name,identity_name
 		from user,identity,class
 		<where>
@@ -105,12 +120,37 @@
 		</where>
 	</select>
 	
-	<!-- 分页通过班级、学号、姓名组合查询，得到userMes对象 -->
-	<select id="seachUserCINPage" resultMap="userMap">
+	<!-- 教师分页通过班级、学号、姓名组合查询，只能查询某些班级的学生信息，得到userMes对象 -->
+	<select id="seachPageTUserCIN" resultMap="userMap">
 		select user.*,class_name,identity_name
 		from user,identity,class
 		<where>
 			user.user_identity=identity.identity_id and user.user_classid=class.class_id and class.class_teacher=#{userTeacherid}
+			<if test="userClassid!=0">and user.user_classid=#{userClassid}</if>
+			<if test="userName!=''">and user.user_name=#{userName}</if>
+			<if test="userId!=0">and user.user_id=#{userId}</if>
+		</where>
+		limit #{firstIndex} , #{limit}
+	</select>
+	
+	<!-- 通过班级、学号、姓名组合查询，得到userMes对象 -->
+	<select id="seachUserCIN" resultMap="userMap">
+		select user.*,class_name,identity_name
+		from user,identity,class
+		<where>
+			user.user_identity=identity.identity_id and user.user_classid=class.class_id and user.user_identity>2
+			<if test="userClassid!=0">and user.user_classid=#{userClassid}</if>
+			<if test="userName!=''">and user.user_name=#{userName}</if>
+			<if test="userId!=0">and user.user_id=#{userId}</if>
+		</where>
+	</select>
+	
+	<!-- 分页通过班级、学号、姓名组合查询，得到userMes对象 -->
+	<select id="seachPageUserCIN" resultMap="userMap">
+		select user.*,class_name,identity_name
+		from user,identity,class
+		<where>
+			user.user_identity=identity.identity_id and user.user_classid=class.class_id and user.user_identity>2
 			<if test="userClassid!=0">and user.user_classid=#{userClassid}</if>
 			<if test="userName!=''">and user.user_name=#{userName}</if>
 			<if test="userId!=0">and user.user_id=#{userId}</if>

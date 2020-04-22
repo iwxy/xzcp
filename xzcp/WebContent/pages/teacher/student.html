@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="../../css/oksub.css">
 </head>
 <body>
-	<form class="layui-form" style="margin-top:20px;margin-left:80px;">
-		
-	<div class="demoTable">
+
+	<div class="demoTable" style="margin-top:20px;margin-left:10px;">
+		<form class="layui-form">
 		<div class="layui-inline">
 	      <label class="layui-form-label">班级</label>
 	      <div class="layui-input-inline">
@@ -31,8 +31,9 @@
 			</div>
 	    </div>
 		<button class="layui-btn" lay-submit lay-filter="seach" style="margin-left:50px;">搜索</button>
+		</form>
+		
 	</div>
-	</form>
 	
     <div class="ok-body">
        
@@ -42,18 +43,22 @@
     <!--js逻辑-->
     <script src="../../lib/layui/layui.js"></script>
     <script>
-        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "okMock"], function () {
+        layui.use(["element", "table", "form", "upload" , "laydate", "okLayer", "okUtils", "okMock"], function () {
             let table = layui.table;
             let form = layui.form;
+            let upload = layui.upload;
             let laydate = layui.laydate;
             let okLayer = layui.okLayer;
             let okUtils = layui.okUtils;
             let okMock = layui.okMock;
             let $ = layui.jquery;
             let $form = $('form');
+            
+            
+            
             let userTable = table.render({
                 elem: '#tableId', //表格标签的id
-                url: okMock.api.listStudent,//url写这里，连接后台
+                url: okMock.api.listTStudent,//url写这里，连接后台
                 limit: 10, //默认每页显示多少条数据
                 page: true, // 是否分页
                 toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
@@ -74,6 +79,15 @@
                 ]],
                 done: function (res, curr, count) {
                     console.info(res, curr, count);
+                    upload.render({
+                        elem: '#file'
+                        ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                        ,accept: 'file' //普通文件
+                        ,done: function(res){
+                          layer.alert(res.msg);
+                          console.log(res);
+                        }
+                      });
                 }
             });
 
@@ -85,6 +99,9 @@
                         break;
                     case "add":
                         add();
+                        break;
+                    case "addFile":
+                        addFile();
                         break;
                 }
             });
@@ -123,6 +140,18 @@
                 okLayer.open("添加学生", "student-add.html", "60%", "90%", null, function () {
                     userTable.reload();
                 })
+            }
+            
+            function addFile() {
+            	upload.render({
+                    elem: '#file'
+                    ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                    ,accept: 'file' //普通文件
+                    ,done: function(res){
+                      layer.alert(res.msg);
+                      console.log(res);
+                    }
+                  });
             }
 
             function edit(data) {
@@ -163,7 +192,7 @@
 			                
 			            	let userTable = table.render({
 			                    elem: '#tableId', //表格标签的id
-			                    url: okMock.api.listSeachUserCIN,//url写这里，连接后台
+			                    url: okMock.api.listSeachTUserCIN,//url写这里，连接后台
 			                    limit: 10, //默认每页显示多少条数据
 			                    page: true, // 是否分页
 			                    toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
@@ -190,7 +219,18 @@
 			                    ]],
 			                    done: function (res, curr, count) {
 			                        console.info(res, curr, count);
+			                        upload.render({
+				                          elem: '#file'
+				                          ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+				                          ,accept: 'file' //普通文件
+				                          ,done: function(res){
+				                            layer.alert(res.msg);
+				                            console.log(res);
+				                          }
+				                        });
 			                    }
+			                      
+			                     
 			                });
 			            	
 			                return false;
@@ -199,15 +239,30 @@
                     console.log(error)
                 });
 			     
+              /* let uploads = upload.render({
+                  elem: '#file'
+                  ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                  ,accept: 'file' //普通文件
+                  ,done: function(res){
+                    layer.alert(res.msg);
+                    console.log(res);
+                  }
+                }); */
+                
+            
         });
+        
+        
     </script>
     <!-- 头工具栏模板 -->
     <script type="text/html" id="toolbarTpl">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>
             <button class="layui-btn layui-btn-sm" lay-event="add">添加学生</button>
+			<button class="layui-btn layui-btn-sm" id="file">上传Excel</button>
         </div>
     </script>
+    <!-- <button class="layui-btn layui-btn-sm" id="file">上传Excel</button> -->
     <!-- 行工具栏模板 -->
     <script type="text/html" id="operationTpl">
         <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>

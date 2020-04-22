@@ -18,6 +18,12 @@
                 "icon": "&#xe66f;",
                 "spread": false
             },
+             {
+                "title": "管理学生",
+                "href": "instructor/student.html",
+                "icon": "&#xe66f;",
+                "spread": false
+            },
             {
                 "title": "管理班级",
                 "href": "instructor/class.html",

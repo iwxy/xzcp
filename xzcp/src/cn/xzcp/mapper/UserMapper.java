@@ -45,12 +45,32 @@ public interface UserMapper {
 	/**
 	 * 获得分页某个班主任所教的学生的个人信息
 	 */
-	List<UserMes> getPageStudent(UserMes user);
+	List<UserMes> getPageTStudent(UserMes user);
 
 	/**
 	 * 获得某个班主任所教的所有学生的个人信息
 	 */
-	List<UserMes> getAllStudent(int userId);
+	List<UserMes> getAllTStudent(int userId);
+
+	/**
+	 * 获得分页所有学生的个人信息
+	 */
+	List<UserMes> getPageStudent(UserMes user);
+
+	/**
+	 * 获得所有学生的个人信息
+	 */
+	List<UserMes> getAllStudent();
+
+	/**
+	 * 教师通过班级、学号、姓名组合查询，只能查询某些班级的学生信息，得到userMes对象
+	 */
+	List<UserMes> seachTUserCIN(UserMes user);
+
+	/**
+	 * 教师通过班级、学号、姓名组合查询分页，只能查询某些班级的学生信息，得到userMes对象
+	 */
+	List<UserMes> seachPageTUserCIN(UserMes user);
 
 	/**
 	 * 通过班级、学号、姓名组合查询，得到userMes对象
@@ -60,7 +80,7 @@ public interface UserMapper {
 	/**
 	 * 通过班级、学号、姓名组合查询分页，得到userMes对象
 	 */
-	List<UserMes> seachUserCINPage(UserMes user);
+	List<UserMes> seachPageUserCIN(UserMes user);
 
 	/**
 	 * 获得分页某个班委所在班级的所有学生的个人信息

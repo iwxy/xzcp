@@ -2,12 +2,15 @@ package cn.xzcp.controll;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import cn.xzcp.bean.ClassMes;
 import cn.xzcp.bean.IdentityMes;
@@ -162,16 +165,38 @@ public class UserController {
 	/**
 	 * 获得某个班主任所教的所有学生的个人信息
 	 */
-	@RequestMapping("/getAllStudent")
+	@RequestMapping("/getAllTStudent")
 	@ResponseBody
-	public ResponseResult getAllStudent(UserMes user, HttpSession session) {
+	public ResponseResult getAllTStudent(UserMes user, HttpSession session) {
 		List<UserMes> data;
 		try {
 			User users = (User) session.getAttribute("user");
 			user.setUserId(users.getUserId());
+			data = userService.getPageTStudent(user);
+			// 一共有多少条教师数据
+			int count = userService.getAllTStudent(user.getUserId()).size();
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", count, data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
+		}
+
+	}
+
+	/**
+	 * 获得某个班主任所教的所有学生的个人信息
+	 */
+	@RequestMapping("/getAllStudent")
+	@ResponseBody
+	public ResponseResult getAllStudent(UserMes user) {
+		List<UserMes> data;
+		try {
 			data = userService.getPageStudent(user);
 			// 一共有多少条教师数据
-			int count = userService.getAllStudent(user.getUserId()).size();
+			int count = userService.getAllStudent().size();
 			if (data.size() == 0) {
 				return ResponseResult.build(1, "无数据");
 			} else {
@@ -238,19 +263,61 @@ public class UserController {
 	}
 
 	/**
-	 * 通过班级、学号、姓名组合查询，得到userMes对象
+	 * 通过Excel批量添加用户
 	 */
-	@RequestMapping("/seachUserCIN")
+	@RequestMapping("/excelStudent")
 	@ResponseBody
-	public ResponseResult seachUserCIN(UserMes user, HttpSession session) {
+	public ResponseResult excelStudent(HttpServletRequest request) {
+
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		MultipartFile file = multipartRequest.getFile("file");
+		if (file.isEmpty()) {
+			return ResponseResult.build(1, "文件不存在！");
+		}
+		String msg = userService.ajaxUploadExcel(file);
+		if (msg.equals("导入成功！")) {
+			return ResponseResult.build(0, msg);
+		} else {
+			return ResponseResult.build(1, msg);
+		}
+
+	}
+
+	/**
+	 * 教师通过班级、学号、姓名组合查询，只能查询某些班级的学生信息，得到userMes对象
+	 */
+	@RequestMapping("/seachTUserCIN")
+	@ResponseBody
+	public ResponseResult seachTUserCIN(UserMes user, HttpSession session) {
 		List<UserMes> data;
 
 		try {
 			User user1 = (User) session.getAttribute("user");
 			user.setUserTeacherid(user1.getUserId());
-			System.out.println(user.getUserTeacherid());
-			System.out.println(user.getUserId());
-			data = userService.seachUserCINPage(user);
+			data = userService.seachPageTUserCIN(user);
+			// 一共有多少条教师数据
+			int count = userService.seachTUserCIN(user).size();
+			if (data.size() == 0) {
+				return ResponseResult.build(1, "无数据");
+			} else {
+				return ResponseResult.build(0, "查询成功", count, data);
+			}
+		} catch (Exception e) {
+			return ResponseResult.build(1, "服务器错误，请重新登录！");
+		}
+
+	}
+
+	/**
+	 * 通过班级、学号、姓名组合查询，得到userMes对象
+	 */
+	@RequestMapping("/seachUserCIN")
+	@ResponseBody
+	public ResponseResult seachUserCIN(UserMes user) {
+		List<UserMes> data;
+
+		try {
+			data = userService.seachPageUserCIN(user);
 			// 一共有多少条教师数据
 			int count = userService.seachUserCIN(user).size();
 			if (data.size() == 0) {

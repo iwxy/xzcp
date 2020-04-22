@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>学生列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/oksub.css">
+</head>
+<body>
+
+	<div class="demoTable" style="margin-top:20px;margin-left:10px;">
+		<form class="layui-form">
+		<div class="layui-inline">
+	      <label class="layui-form-label">班级</label>
+	      <div class="layui-input-inline">
+	        <select name="userClassid" id="userClassids">
+	          <option value="0" selected>请选择班级</option>
+	        </select>
+	      </div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">学号</label>
+			<div class="layui-input-inline">
+				<input type="text" name="userId" id="userId" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">姓名</label>
+			<div class="layui-input-inline">
+				<input type="text" name="userName" id="userName" autocomplete="off" class="layui-input">
+			</div>
+	    </div>
+		<button class="layui-btn" lay-submit lay-filter="seach" style="margin-left:50px;">搜索</button>
+		</form>
+		
+	</div>
+	
+    <div class="ok-body">
+       
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "table", "form", "upload" , "laydate", "okLayer", "okUtils", "okMock"], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let upload = layui.upload;
+            let laydate = layui.laydate;
+            let okLayer = layui.okLayer;
+            let okUtils = layui.okUtils;
+            let okMock = layui.okMock;
+            let $ = layui.jquery;
+            let $form = $('form');
+            
+            
+            
+            let userTable = table.render({
+                elem: '#tableId', //表格标签的id
+                url: okMock.api.listStudent,//url写这里，连接后台
+                limit: 10, //默认每页显示多少条数据
+                page: true, // 是否分页
+                toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+                defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+                size: "sm",
+                cols: [[
+                    {type: "checkbox", fixed: "left"},
+                    {field: "userId", title: "学号", width: 160, sort: true},
+                    {field: "userName", title: "姓名", width: 100},
+                    {field: "password", title: "密码", width: 100},
+                    {field: "userSex", title: "性别", width: 100},
+                    {field: "userClassName", title: "班级", width: 100},
+                    {field: "userIdentityName", title: "职位", width: 100},
+                    {field: "userDormitory", title: "寝室号", width: 100},
+                    {field: "userPhone", title: "电话", width: 100},
+                    {field: "userAddress", title: "地址", width: 200},
+                    {title: "操作", width: 100, align: "center", fixed: "right", templet: "#operationTpl"}
+                ]],
+                done: function (res, curr, count) {
+                    console.info(res, curr, count);
+                    upload.render({
+                        elem: '#file'
+                        ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                        ,accept: 'file' //普通文件
+                        ,done: function(res){
+                          layer.alert(res.msg);
+                          console.log(res);
+                        }
+                      });
+                }
+            });
+
+            
+            table.on("toolbar(tableFilter)", function (obj) {
+                switch (obj.event) {
+                    case "batchDel":
+                        batchDel();
+                        break;
+                    case "add":
+                        add();
+                        break;
+                    case "addFile":
+                        addFile();
+                        break;
+                }
+            });
+
+            table.on("tool(tableFilter)", function (obj) {
+                let data = obj.data;
+                switch (obj.event) {
+                    case "edit":
+                        edit(data);
+                        break;
+                    case "del":
+                        del(data.userId);
+                        break;
+                }
+            });
+
+            
+
+            function batchDel() {
+                okLayer.confirm("确定要批量删除吗？", function (index) {
+                    layer.close(index);
+                    let idsStr = okUtils.tableBatchCheck(table);
+                    if (idsStr) {
+                    	var params="idsStr="+idsStr;
+                        okUtils.ajax("/user/deleteUser", "get", params, true).done(function (response) {
+                            console.log(response);
+                            okUtils.tableSuccessMsg(response.msg);
+                        }).fail(function (error) {
+                            console.log(error)
+                        });
+                    }
+                });
+            }
+
+            function add() {
+                okLayer.open("添加学生", "student-add.html", "60%", "90%", null, function () {
+                    userTable.reload();
+                })
+            }
+            
+            function addFile() {
+            	upload.render({
+                    elem: '#file'
+                    ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                    ,accept: 'file' //普通文件
+                    ,done: function(res){
+                      layer.alert(res.msg);
+                      console.log(res);
+                    }
+                  });
+            }
+
+            function edit(data) {
+                okLayer.open("更新学生", "student-edit.html?userId="+data.userId, "60%", "90%", function (layero) {
+                    let iframeWin = window[layero.find("iframe")[0]["name"]];
+                    iframeWin.initForm(data);
+                }, function () {
+                    userTable.reload();
+                })
+            }
+
+            function del(userId) {
+            	var params="idsStr="+userId+",";
+                okLayer.confirm("确定要删除吗？", function (index) {
+                    okUtils.ajax("/user/deleteUser", "get", params, true).done(function (response) {
+                        console.log(response);
+                        okUtils.tableSuccessMsg(response.msg);
+                    }).fail(function (error) {
+                        console.log(error)
+                    });
+                })
+            }
+            
+			var params="";
+            
+            okUtils.ajax("/record/getAllClass", "get", params, true).done(
+        			function(response) {
+        				var clazz = response.data;
+        				for(var i=0;i<clazz.length;i++){
+        					$("#userClassids").append("<option value='"+clazz[i].classId+"'>"+clazz[i].className+"</option>");
+        				}
+        				form.render('select');
+        				
+			            form.on("submit(seach)", function (data) {
+			            	if(data.field.userId==""){
+			            		data.field.userId=0;
+			            	}
+			                
+			            	let userTable = table.render({
+			                    elem: '#tableId', //表格标签的id
+			                    url: okMock.api.listSeachUserCIN,//url写这里，连接后台
+			                    limit: 10, //默认每页显示多少条数据
+			                    page: true, // 是否分页
+			                    toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
+			                    defaultToolbar: ['filter', 'exports'], //显示哪些列，导出
+			                    size: "sm",
+			                    method:'post',
+			                    where: {
+			                        userClassid:data.field.userClassid,
+			                        userId:data.field.userId,
+			                        userName:data.field.userName
+			                      },
+			                    cols: [[
+			                        {type: "checkbox", fixed: "left"},
+			                        {field: "userId", title: "学号", width: 160, sort: true},
+			                        {field: "userName", title: "姓名", width: 100},
+			                        {field: "password", title: "密码", width: 100},
+			                        {field: "userSex", title: "性别", width: 100},
+			                        {field: "userClassName", title: "班级", width: 100},
+			                        {field: "userIdentityName", title: "职位", width: 100},
+			                        {field: "userDormitory", title: "寝室号", width: 100},
+			                        {field: "userPhone", title: "电话", width: 100},
+			                        {field: "userAddress", title: "地址", width: 200},
+			                        {title: "操作", width: 100, align: "center", fixed: "right", templet: "#operationTpl"}
+			                    ]],
+			                    done: function (res, curr, count) {
+			                        console.info(res, curr, count);
+			                        upload.render({
+				                          elem: '#file'
+				                          ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+				                          ,accept: 'file' //普通文件
+				                          ,done: function(res){
+				                            layer.alert(res.msg);
+				                            console.log(res);
+				                          }
+				                        });
+			                    }
+			                      
+			                     
+			                });
+			            	
+			                return false;
+			            });
+       			}).fail(function (error) {
+                    console.log(error)
+                });
+			     
+              /* let uploads = upload.render({
+                  elem: '#file'
+                  ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                  ,accept: 'file' //普通文件
+                  ,done: function(res){
+                    layer.alert(res.msg);
+                    console.log(res);
+                  }
+                }); */
+                
+            
+        });
+        
+        
+    </script>
+    <!-- 头工具栏模板 -->
+    <script type="text/html" id="toolbarTpl">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">批量删除</button>
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加学生</button>
+			<button class="layui-btn layui-btn-sm" id="file">上传Excel</button>
+        </div>
+    </script>
+    <!-- <button class="layui-btn layui-btn-sm" id="file">上传Excel</button> -->
+    <!-- 行工具栏模板 -->
+    <script type="text/html" id="operationTpl">
+        <a href="javascript:" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+        <a href="javascript:" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    </script>
+    
+</body>
+</html>
