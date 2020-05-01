@@ -9,7 +9,7 @@ layui.define(["layer"], function(exprots) {
 		/**
 		 * 服务器地址
 		 */
-		baseUrl : "http://localhost:7050/xzcp",
+		baseUrl : "http://47.105.61.4:7050/xzcp",
 		/**
 		 * 获取body的总宽度
 		 */

@@ -25,7 +25,7 @@
             
             let userTable = table.render({
                 elem: '#tableId', //表格标签的id
-                url: okMock.api.listItem,//url写这里，连接后台
+                url: '/xzcp/item/getAllItem',//url写这里，连接后台
                 limit: 10, //默认每页显示多少条数据
                 page: true, // 是否分页
                 toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）

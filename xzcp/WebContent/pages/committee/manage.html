@@ -62,7 +62,7 @@
             
             let userTable = table.render({
                 elem: '#tableId', //表格标签的id
-                url: okMock.api.listCommitteeRecord,//url写这里，连接后台
+                url: '/xzcp/record/getAllCommitteeRecord',//url写这里，连接后台
                 limit: 10, //默认每页显示多少条数据
                 page: true, // 是否分页
                 toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
@@ -153,7 +153,7 @@
                 
             	let userTable = table.render({
                     elem: '#tableId', //表格标签的id
-                    url: okMock.api.listSeachRecordIT,//url写这里，连接后台
+                    url: '/xzcp/record/seachRecordIT',//url写这里，连接后台
                     limit: 10, //默认每页显示多少条数据
                     page: true, // 是否分页
                     toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）

@@ -58,7 +58,7 @@
             
             let userTable = table.render({
                 elem: '#tableId', //表格标签的id
-                url: okMock.api.listTStudent,//url写这里，连接后台
+                url: '/xzcp/user/getAllTStudent',//url写这里，连接后台
                 limit: 10, //默认每页显示多少条数据
                 page: true, // 是否分页
                 toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
@@ -81,7 +81,7 @@
                     console.info(res, curr, count);
                     upload.render({
                         elem: '#file'
-                        ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+                        ,url: '/xzcp/user/excelStudent' //改成您自己的上传接口
                         ,accept: 'file' //普通文件
                         ,done: function(res){
                           layer.alert(res.msg);
@@ -99,9 +99,6 @@
                         break;
                     case "add":
                         add();
-                        break;
-                    case "addFile":
-                        addFile();
                         break;
                 }
             });
@@ -142,18 +139,6 @@
                 })
             }
             
-            function addFile() {
-            	upload.render({
-                    elem: '#file'
-                    ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
-                    ,accept: 'file' //普通文件
-                    ,done: function(res){
-                      layer.alert(res.msg);
-                      console.log(res);
-                    }
-                  });
-            }
-
             function edit(data) {
                 okLayer.open("更新学生", "student-edit.html?userId="+data.userId, "60%", "90%", function (layero) {
                     let iframeWin = window[layero.find("iframe")[0]["name"]];
@@ -192,7 +177,7 @@
 			                
 			            	let userTable = table.render({
 			                    elem: '#tableId', //表格标签的id
-			                    url: okMock.api.listSeachTUserCIN,//url写这里，连接后台
+			                    url: '/xzcp/user/seachTUserCIN',//url写这里，连接后台
 			                    limit: 10, //默认每页显示多少条数据
 			                    page: true, // 是否分页
 			                    toolbar: "#toolbarTpl", //工具栏（批量删除，添加用户）
@@ -221,7 +206,7 @@
 			                        console.info(res, curr, count);
 			                        upload.render({
 				                          elem: '#file'
-				                          ,url: 'http://localhost:7050/xzcp/user/excelStudent' //改成您自己的上传接口
+				                          ,url: '/xzcp/user/excelStudent' //改成您自己的上传接口
 				                          ,accept: 'file' //普通文件
 				                          ,done: function(res){
 				                            layer.alert(res.msg);
